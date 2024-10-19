@@ -1,0 +1,33 @@
+﻿@model Movie
+<h1 class="card-title">@Model.Name</h1>
+<div class="card mb-3">
+    <div class="row g-1">
+        <div class="col-md-6">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+
+                <p> @Model.Description</p>
+                <p> Price: @Model.Price</p>
+                <p> Price: @Model.Price</p>
+                <p> cinema: @Model.cinema.Name</p>
+                <p> StartDate: @Model.StartDate</p>
+                <p> EndDate: @Model.EndDate</p>
+                <p> category: @Model.category.Name</p>
+                         @foreach (var item in ViewBag.actorsmovies)
+                {
+                    <h6>hellow</h6>
+@*                <a asp-action="#"> <img src="~/images/cast/@item.ProfilePicture" /> </a> 
+ *@             
+                    <h6>@item.Id </h6>
+                        
+                } 
+                
+                @*                 <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                *@
+                <h2>why</h2>
+            </div>
+        </div>
+    </div>
+</div>
