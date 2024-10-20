@@ -11,7 +11,6 @@ namespace ETickets.Controllers
         private readonly ILogger<HomeController> _logger;
 
         ApplicationDbContext context = new ApplicationDbContext();
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -26,9 +25,9 @@ namespace ETickets.Controllers
         {
             var movie = context.Movies.Include(m=>m.category).Include(m=>m.cinema)
                 .Include(m=>m.Actors).Where(m=>m.Id==id).FirstOrDefault();
-            var actormovies = context.ActorsMovie.Where(e=>e.MovieId ==id ).Select( e=> new { e.ActorId , e.MovieId}).ToList();
-            ViewBag.actorsmovies = actormovies;
-            var actors = context.Actors.ToList();
+            var actorsmovies = context.ActorsMovies.Where(e=>e.MovieId ==id ).Select( e=> new { e.ActorId , e.MovieId}).ToList();
+            ViewBag.actorsmovies = actorsmovies;
+            var actors = context.Actors.Select( e=> new { FullName= e.FirstName+" "+e.LastName , e.Bio , e.Id , e.ProfilePicture , e.News , e.Movies } ).ToList();
             ViewBag.actors = actors;
             return View(movie);
         }

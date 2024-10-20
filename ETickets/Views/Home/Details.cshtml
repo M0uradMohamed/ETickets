@@ -1,4 +1,5 @@
 ﻿@model Movie
+<button type="button" class="btn btn-primary">@Model.movieStatus</button>
 <h1 class="card-title">@Model.Name</h1>
 <div class="card mb-3">
     <div class="row g-1">
@@ -13,15 +14,27 @@
                 <p>StartDate: @Model.StartDate</p>
                 <p>EndDate: @Model.EndDate</p>
                 <p>category: @Model.category.Name</p>
-                    <h5>cast :</h5>
-                <div class="d-flex flex-wrap">
+                <h5>cast :</h5>
+                <div class="d-flex flex-wrap mb-3">
                     @foreach (var item in ViewBag.actorsmovies)
                     {
-                        <a asp-action="#" asp-controller="#" class="me-2">
-                            <img src="~/images/cast/@ViewBag.actors[@item.ActorId].ProfilePicture" class="img-fluid" />
-                        </a>
+                        <form asp-action="Index" asp-controller="Actors" asp-route-actorname="@ViewBag.actors[@item.ActorId].FullName" class="me-2" id="actorForm-@item.ActorId">
+                            <input name="Id" value="@item.ActorId" type="hidden" />
+                            <a href="#" onclick="document.getElementById('actorForm-@item.ActorId').submit();">
+                                <img src="~/images/cast/@ViewBag.actors[@item.ActorId-1].ProfilePicture" class="img-fluid" />
+                            </a>
+                        </form>
+
                     }
                 </div>
+                <h5 class="mb-1"> trailer</h5>
+                <div class="mb-2">
+
+                    <iframe width="220" height="150"
+                            src="@Model.TrailerUrl">
+                    </iframe>
+                </div>
+                <button type="button" class="btn btn-success">Book ticket</button>
             </div>
         </div>
     </div>
