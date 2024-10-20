@@ -26,8 +26,10 @@ namespace ETickets.Controllers
         {
             var movie = context.Movies.Include(m=>m.category).Include(m=>m.cinema)
                 .Include(m=>m.Actors).Where(m=>m.Id==id).FirstOrDefault();
-            var actormovies = context.ActorsMovie.Where(e=>e.MovieId ==id ).ToList();
+            var actormovies = context.ActorsMovie.Where(e=>e.MovieId ==id ).Select( e=> new { e.ActorId , e.MovieId}).ToList();
             ViewBag.actorsmovies = actormovies;
+            var actors = context.Actors.ToList();
+            ViewBag.actors = actors;
             return View(movie);
         }
         public IActionResult Privacy()
