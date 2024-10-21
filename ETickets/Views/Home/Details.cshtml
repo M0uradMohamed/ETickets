@@ -1,5 +1,5 @@
 ﻿@model Movie
-<button type="button" class="btn btn-primary" style="background-color:blue" disabled >@Model.movieStatus</button>
+<button type="button" class="btn btn-primary" style="background-color:blue" disabled>@Model.movieStatus</button>
 
 
 <h1 class="card-title">@Model.Name</h1>
@@ -18,12 +18,12 @@
                 <p>category: @Model.category.Name</p>
                 <h5>cast :</h5>
                 <div class="d-flex flex-wrap mb-3">
-                    @foreach (var item in ViewBag.actorsmovies)
+                    @foreach (var item in Model.Actors)
                     {
-                        <form asp-action="Index" asp-controller="Actors" asp-route-actorname="@ViewBag.actors[@item.ActorId].FullName" class="me-2" id="actorForm-@item.ActorId">
-                            <input name="Id" value="@item.ActorId" type="hidden" />
-                            <a href="#" onclick="document.getElementById('actorForm-@item.ActorId').submit();">
-                                <img src="~/images/cast/@ViewBag.actors[@item.ActorId-1].ProfilePicture" class="img-fluid" />
+                        <form asp-action="Index" asp-controller="Actors" asp-route-actorname="@item.FirstName @item.LastName" class="me-2" id="actorForm-@item.Id">
+                            <input name="Id" value="@item.Id" type="hidden" />
+                            <a href="#" onclick="document.getElementById('actorForm-@item.Id').submit();">
+                                <img src="~/images/cast/@item.ProfilePicture" class="img-fluid" />
                             </a>
                         </form>
 

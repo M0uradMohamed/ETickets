@@ -1,5 +1,6 @@
 ﻿using ETickets.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETickets.Controllers
 {
@@ -16,11 +17,8 @@ namespace ETickets.Controllers
         }
         public IActionResult Movies(int id)
         {
-            var actor = context.Actors.Find(id);
-           var movies = context.Movies.ToList();
-            ViewBag.Movies= movies;
-            var actorsMovies=context.ActorsMovies.Where(e=>e.ActorId == id);
-            ViewBag.ActorsMovies = actorsMovies;
+            var actor = context.Actors.Include(e=>e.Movies).Where(e=>e.Id == id).FirstOrDefault();
+
             return View(actor);
         }
     }
