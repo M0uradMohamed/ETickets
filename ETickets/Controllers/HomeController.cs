@@ -21,23 +21,23 @@ namespace ETickets.Controllers
             var allMovies = context.Movies.ToList();
             foreach (var movie in allMovies)
             {
-                if(movie.StartDate > DateTime.Now)
-                    movie.movieStatus = MovieStatus.Upcoming;
-                else if(movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
-                    movie.movieStatus = MovieStatus.Available;
+                if (movie.StartDate > DateTime.Now)
+                    movie.MovieStatus = MovieStatus.Upcoming;
+                else if (movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
+                    movie.MovieStatus = MovieStatus.Available;
                 else
-                    movie.movieStatus = MovieStatus.Expired;
+                    movie.MovieStatus = MovieStatus.Expired;
             }
  
             context.SaveChanges();
 
-            var movies = context.Movies.Include(m => m.category ).Include(m=>m.cinema ).ToList();
+            var movies = context.Movies.Include(m => m.Category).Include(m => m.Cinema).ToList();
             return View(movies);
         }
         public IActionResult Details(int id)
         {
             var acotrsmovies = context.Movies.Include(e => e.Actors)
-                .Include(e => e.category).Include(e => e.cinema).Where(e => e.Id == id).FirstOrDefault();
+                .Include(e => e.Category).Include(e => e.Cinema).Where(e => e.Id == id).FirstOrDefault();
             return View(acotrsmovies);
         }
 

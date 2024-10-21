@@ -9,7 +9,7 @@ namespace ETickets.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Cinema> cinemas { get; set; }
+        public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

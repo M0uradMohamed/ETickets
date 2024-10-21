@@ -4,6 +4,7 @@ using ETickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021194523_editCinemasTableName")]
+    partial class editCinemasTableName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,9 +144,6 @@ namespace ETickets.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MovieStatus")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -157,6 +157,9 @@ namespace ETickets.Migrations
                     b.Property<string>("TrailerUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("movieStatus")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -202,27 +205,27 @@ namespace ETickets.Migrations
 
             modelBuilder.Entity("ETickets.Models.Movie", b =>
                 {
-                    b.HasOne("ETickets.Models.Category", "Category")
+                    b.HasOne("ETickets.Models.Category", "category")
                         .WithMany("Movies")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ETickets.Models.Cinema", "Cinema")
+                    b.HasOne("ETickets.Models.Cinema", "cinema")
                         .WithMany("Movies")
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("category");
 
-                    b.Navigation("Cinema");
+                    b.Navigation("cinema");
                 });
 
             modelBuilder.Entity("ETickets.Models.OrderItem", b =>
                 {
                     b.HasOne("ETickets.Models.Movie", null)
-                        .WithMany("OrderItems")
+                        .WithMany("orderItems")
                         .HasForeignKey("MovieId");
                 });
 
@@ -238,7 +241,7 @@ namespace ETickets.Migrations
 
             modelBuilder.Entity("ETickets.Models.Movie", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("orderItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,5 @@
 ﻿@model Movie
-<button type="button" class="btn btn-primary" style="background-color:blue" disabled>@Model.movieStatus</button>
+<button type="button" class="btn btn-primary" style="background-color:blue" disabled>@Model.MovieStatus</button>
 
 
 <h1 class="card-title">@Model.Name</h1>
@@ -12,10 +12,10 @@
             <div class="card-body">
                 <p>@Model.Description</p>
                 <p>Price: @Model.Price</p>
-                <p>cinema: @Model.cinema.Name</p>
+                <p>cinema: @Model.Cinema.Name</p>
                 <p>StartDate: @Model.StartDate</p>
                 <p>EndDate: @Model.EndDate</p>
-                <p>category: @Model.category.Name</p>
+                <p>category: @Model.Category.Name</p>
                 <h5>cast :</h5>
                 <div class="d-flex flex-wrap mb-3">
                     @foreach (var item in Model.Actors)

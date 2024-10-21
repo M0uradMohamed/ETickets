@@ -12,15 +12,15 @@ namespace ETickets.Models
         public string TrailerUrl { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public MovieStatus movieStatus { get; set; }
+        public MovieStatus MovieStatus { get; set; }
 
         public int CinemaId { get; set; }
         public int CategoryId { get; set; }
 
-        public Cinema cinema { get; set; }
-        public Category category { get; set; }
+        public Cinema Cinema { get; set; }
+        public Category Category { get; set; }
         public List<Actor> Actors { get; set; }
-        public List<OrderItem> orderItems { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
 
 
     }

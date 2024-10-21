@@ -15,23 +15,23 @@
                         <div class="col-md-8">
                             <div class="card-body">
                                 <p class="card-text">Price: @item.Price</p>
-                                <p class="card-text">Cinema: @item.cinema.Name</p>
+                                <p class="card-text">Cinema: @item.Cinema.Name</p>
                                 <p class="card-text">StartDate: @item.StartDate</p>
                                 <p class="card-text">EndDate: @item.EndDate</p>
-                                <p class="card-text">Category: @item.category.Name</p>
+                               <p class="card-text">Category: @item.Category.Name</p>
                                 <div class="mb-3">
                                     @{
-                                        if (item.movieStatus == MovieStatus.Upcoming)
+                                        if (item.MovieStatus == MovieStatus.Upcoming)
                                         {
-                                            <button type="button" class="btn btn-primary" style="background-color:darkslategray " disabled>@item.movieStatus</button>
+                                            <button type="button" class="btn btn-primary" style="background-color:darkslategray " disabled>@item.MovieStatus</button>
                                         }
-                                        else if (item.movieStatus == MovieStatus.Available)
+                                        else if (item.MovieStatus == MovieStatus.Available)
                                         {
-                                            <button type="button" class="btn btn-primary" style="background-color:blue " disabled>@item.movieStatus</button>
+                                            <button type="button" class="btn btn-primary" style="background-color:blue " disabled>@item.MovieStatus</button>
                                         }
-                                        else if (item.movieStatus == MovieStatus.Expired)
+                                        else if (item.MovieStatus == MovieStatus.Expired)
                                         {
-                                            <button type="button" class="btn btn-primary" style="background-color:red" disabled>@item.movieStatus</button>
+                                            <button type="button" class="btn btn-primary" style="background-color:red" disabled>@item.MovieStatus</button>
                                         }
                                     }
                                 </div>
