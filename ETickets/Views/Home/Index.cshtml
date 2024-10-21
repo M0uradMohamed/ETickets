@@ -1,4 +1,5 @@
-﻿<div class="container">
+﻿@model IEnumerable<Movie>
+<div class="container">
     <div class="row">
         @foreach (var item in Model)
         {
@@ -18,7 +19,22 @@
                                 <p class="card-text">StartDate: @item.StartDate</p>
                                 <p class="card-text">EndDate: @item.EndDate</p>
                                 <p class="card-text">Category: @item.category.Name</p>
-                                <p class="card-text">@item.movieStatus</p>
+                                <div class="mb-3">
+                                    @{
+                                        if (item.movieStatus == MovieStatus.Upcoming)
+                                        {
+                                            <button type="button" class="btn btn-primary" style="background-color:darkslategray " disabled>@item.movieStatus</button>
+                                        }
+                                        else if (item.movieStatus == MovieStatus.Available)
+                                        {
+                                            <button type="button" class="btn btn-primary" style="background-color:blue " disabled>@item.movieStatus</button>
+                                        }
+                                        else if (item.movieStatus == MovieStatus.Expired)
+                                        {
+                                            <button type="button" class="btn btn-primary" style="background-color:red" disabled>@item.movieStatus</button>
+                                        }
+                                    }
+                                </div>
                                 <a asp-action="details" asp-route-id="@item.Id" class="btn btn-primary">Show More...</a>
                             </div>
                         </div>

@@ -1,0 +1,25 @@
+﻿@model Actor
+<div class="container">
+    <div class="row">
+        <h3>name : @Model.FirstName</h3>
+        <img src="~/images/cast/@Model.ProfilePicture" height="5px" width="5px" class="img-fluid rounded-start" alt="...">
+        @foreach (var item in ViewBag.ActorsMovies)
+        {
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                        </div>
+
+                        <div class="card-body">
+                            <img src="~/images/movies/@ViewBag.Movies[item.MovieId-1].ImgUrl" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="card-footer">
+                            @ViewBag.Movies[item.MovieId-1].Name
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

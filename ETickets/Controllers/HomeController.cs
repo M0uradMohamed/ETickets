@@ -18,6 +18,19 @@ namespace ETickets.Controllers
 
         public IActionResult Index()
         {
+            var allMovies = context.Movies.ToList();
+            foreach (var movie in allMovies)
+            {
+                if(movie.StartDate > DateTime.Now)
+                    movie.movieStatus = MovieStatus.Upcoming;
+                else if(movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
+                    movie.movieStatus = MovieStatus.Available;
+                else
+                    movie.movieStatus = MovieStatus.Expired;
+            }
+ 
+            context.SaveChanges();
+
             var movies = context.Movies.Include(m => m.category ).Include(m=>m.cinema ).ToList();
             return View(movies);
         }
@@ -25,7 +38,7 @@ namespace ETickets.Controllers
         {
             var movie = context.Movies.Include(m=>m.category).Include(m=>m.cinema)
                 .Include(m=>m.Actors).Where(m=>m.Id==id).FirstOrDefault();
-            var actorsmovies = context.ActorsMovies.Where(e=>e.MovieId ==id ).Select( e=> new { e.ActorId , e.MovieId}).ToList();
+            var actorsmovies = context.ActorsMovies.Where(e=>e.MovieId ==id ).ToList();
             ViewBag.actorsmovies = actorsmovies;
             var actors = context.Actors.Select( e=> new { FullName= e.FirstName+" "+e.LastName , e.Bio , e.Id , e.ProfilePicture , e.News , e.Movies } ).ToList();
             ViewBag.actors = actors;
