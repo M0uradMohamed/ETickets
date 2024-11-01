@@ -32,11 +32,15 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cinemas" asp-action="Index">Cinemas </a>
                         </li>
                     </ul>
+
                     <div class="d-flex ms-auto">
                         <form asp-action="index" asp-controller="Search" class="d-flex">
                             <input type="text" class="form-control me-2" placeholder="Search for movie..." name="name">
                             <button type="submit" class="btn btn-light text-dark  ms-1">Search</button>
                         </form>
+                    </div>
+                    <div>
+                        <partial name="_LoginPartial"></partial>
                     </div>
                 </div>
             </div>
