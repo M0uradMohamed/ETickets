@@ -1,14 +1,20 @@
 ﻿using ETickets.Data;
+using ETickets.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETickets.Controllers
 {
     public class SearchController : Controller
     {
-        ApplicationDbContext context = new ApplicationDbContext();
+        private readonly IMovieRepository movieRepository;
+
+        public SearchController(IMovieRepository movieRepository)
+        {
+            this.movieRepository = movieRepository;
+        }
         public IActionResult Index(string name)
         {
-            var movies = context.Movies.Where(e=>e.Name.Contains(name)).ToList();
+            var movies = movieRepository.Get(expression:e=>e.Name.Contains(name));
             return View(movies);
         }
     }
