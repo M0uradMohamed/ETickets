@@ -6,7 +6,7 @@ namespace ETickets.Controllers
 {
     public class ActorsController : Controller
     {
-        ApplicationDbContext context = new ApplicationDbContext();
+        
         public IActionResult Index(string actorname , int Id)
         {
         

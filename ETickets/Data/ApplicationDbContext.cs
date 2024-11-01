@@ -12,19 +12,7 @@ namespace ETickets.Data
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
 
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true).Build();
-
-            var connection = builder.GetConnectionString("DefaultConnection");
-
-            optionsBuilder.UseSqlServer(connection);
-
-
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
