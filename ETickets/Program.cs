@@ -2,6 +2,7 @@ using ETickets.Data;
 using ETickets.Repository.IRepository;
 using ETickets.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ETickets
 {
@@ -13,9 +14,12 @@ namespace ETickets
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddScoped<IActorMovieRepository, ActorMovieRepository>();
             builder.Services.AddScoped<IActorRepository, ActorRepository>();
@@ -39,12 +43,13 @@ namespace ETickets
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.MapRazorPages();
 
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
