@@ -2,9 +2,8 @@
 using ETickets.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ETickets.Areas.Customer.Controllers
+namespace ETickets.Controllers
 {
-    [Area("Customer")]
     public class SearchController : Controller
     {
         private readonly IMovieRepository movieRepository;
@@ -15,7 +14,7 @@ namespace ETickets.Areas.Customer.Controllers
         }
         public IActionResult Index(string name)
         {
-            var movies = movieRepository.Get(expression: e => e.Name.Contains(name));
+            var movies = movieRepository.Get(expression:e=>e.Name.Contains(name));
             return View(movies);
         }
     }
