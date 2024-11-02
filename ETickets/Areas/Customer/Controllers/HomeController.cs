@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace ETickets.Controllers
+namespace ETickets.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMovieRepository movieRepository;
 
 
-        public HomeController(IMovieRepository movieRepository , ILogger<HomeController> logger)
+        public HomeController(IMovieRepository movieRepository, ILogger<HomeController> logger)
         {
             this.movieRepository = movieRepository;
             _logger = logger;
@@ -37,16 +38,16 @@ namespace ETickets.Controllers
                 else
                     movie.MovieStatus = MovieStatus.Expired;
             }
- 
+
             movieRepository.Commit();
 
-            var movies = movieRepository.Get(includeProps: [m => m.Category,m => m.Cinema ]);
+            var movies = movieRepository.Get(includeProps: [m => m.Category, m => m.Cinema]);
             return View(movies);
         }
         public IActionResult Details(int id)
         {
             var acotrsmovies = movieRepository.GetOne(includeProps: [e => e.Actors
-                , e => e.Category,e => e.Cinema ] ,expression: e => e.Id == id);
+                , e => e.Category,e => e.Cinema ], expression: e => e.Id == id);
             return View(acotrsmovies);
         }
 
