@@ -77,7 +77,16 @@ namespace ETickets.Areas.Admin.Controllers
 
                 }
                 else
+                {
+                    ModelState.AddModelError(string.Empty, "ther is no img");
+                    var categories = categoryRepository.Get();
+                    var cinemas = cinemaRepository.Get();
+                    var actors = actorRepository.Get();
+                    ViewBag.cinemas = cinemas;
+                    ViewBag.categories = categories;
+                    ViewBag.actors = actors;
                     return View(movieVM);
+                }
 
                 if (movieVM.EndDate > DateTime.Now && movieVM.EndDate > movieVM.StartDate)
                 {
@@ -99,7 +108,19 @@ namespace ETickets.Areas.Admin.Controllers
 
                 }
                 else
+                {
+                    if (movieVM.EndDate <= movieVM.StartDate)
+                        ModelState.AddModelError(string.Empty, " the end date can't be before the start date ");
+                              if (movieVM.EndDate < DateTime.Now)
+                        ModelState.AddModelError(string.Empty, " the end date can't be before today date ");
+                    var categories = categoryRepository.Get();
+                    var cinemas = cinemaRepository.Get();
+                    var actors = actorRepository.Get();
+                    ViewBag.cinemas = cinemas;
+                    ViewBag.categories = categories;
+                    ViewBag.actors = actors;
                     return View(movieVM);
+                }
 
                 movieRepository.Create(movie);
                 movieRepository.Commit();
@@ -115,6 +136,9 @@ namespace ETickets.Areas.Admin.Controllers
 
             return RedirectToAction("index");
             }
+            else
+            {
+
             var categories = categoryRepository.Get();
             var cinemas = cinemaRepository.Get();
             var actors = actorRepository.Get();
@@ -122,6 +146,7 @@ namespace ETickets.Areas.Admin.Controllers
             ViewBag.categories = categories;
             ViewBag.actors = actors;
             return View(movieVM);
+            }
         }
         public IActionResult Edit(int id)
         {
