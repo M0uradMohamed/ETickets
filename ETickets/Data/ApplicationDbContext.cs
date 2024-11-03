@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ETickets.Areas.Admin.ViewModels;
 
 namespace ETickets.Data
 {
@@ -28,6 +29,8 @@ namespace ETickets.Data
             modelBuilder.Entity<Movie>().HasMany(m => m.Actors).WithMany(a => a.Movies).
                 UsingEntity<ActorMovie>().HasKey(j => new { j.MovieId, j.ActorId });
         }
+
+public DbSet<ETickets.Areas.Admin.ViewModels.MovieVM> MovieVM { get; set; } = default!;
     }
 }
 
