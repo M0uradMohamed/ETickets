@@ -48,6 +48,7 @@ namespace ETickets.Areas.Admin.Controllers
         public IActionResult create(MovieVM movieVM, IFormFile file , List<int> actorsIds)
         {
             ModelState.Remove("file");
+            ModelState.Remove("actorsIds");
             if (ModelState.IsValid)
             {
                 var movie = new Movie();
@@ -150,40 +151,146 @@ namespace ETickets.Areas.Admin.Controllers
         }
         public IActionResult Edit(int id)
         {
-            var movie = movieRepository.GetOne(expression: e => e.Id == id);
-            var movieVM = new MovieVM()
+            var movie = movieRepository.GetOne(expression: e => e.Id == id , includeProps: [e=>e.Actors , e=>e.Category , e => e.Cinema]);
+            var movieVMEdit = new MovieVMEdit()
             {
+                Id = movie.Id,
                 Name = movie.Name,
                 Description = movie.Description,
                 StartDate = movie.StartDate,
                 EndDate = movie.EndDate,
                 Price = movie.Price,
                 TrailerUrl = movie.TrailerUrl,
+                ImgUrl = movie.ImgUrl,
+                CategoryId = movie.CategoryId,
+                CinemaId = movie.CinemaId,
+                Actors = movie.Actors,
 
             };
-            return View(movieVM);
+            var categories = categoryRepository.Get();
+            var cinemas = cinemaRepository.Get();
+            var actors = actorRepository.Get();
+            ViewBag.cinemas = cinemas;
+            ViewBag.categories = categories;
+            ViewBag.actors = actors;
+            return View(movieVMEdit);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(MovieVM movieVM)
+        public IActionResult Edit(MovieVMEdit movieVMEdit, IFormFile file, List<int> actorsIds)
         {
+            ModelState.Remove("file");
+            ModelState.Remove("actorsIds");
             if (ModelState.IsValid)
             {
-                var movie = new Movie()
-                {
-                    Name = movieVM.Name,
-                    Description = movieVM.Description,
-                    StartDate = movieVM.StartDate,
-                    EndDate = movieVM.EndDate,
-                    Price = movieVM.Price,
-                    TrailerUrl = movieVM.TrailerUrl,
+                var movie = new Movie();
 
-                };
+                if (file != null)
+                {
+                    string random = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(file.FileName);
+
+
+                    string fileName = random + extension;
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", fileName);
+
+                    string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies");
+
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    movie.ImgUrl = fileName;
+
+                }
+                else
+                {
+                   movie.ImgUrl=movieVMEdit.ImgUrl;
+                }
+
+                if (movieVMEdit.EndDate > DateTime.Now && movieVMEdit.EndDate > movieVMEdit.StartDate)
+                {
+                    if (movie.StartDate > DateTime.Now)
+                        movie.MovieStatus = MovieStatus.Upcoming;
+                    else if (movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
+                        movie.MovieStatus = MovieStatus.Available;
+                    else
+                        movie.MovieStatus = MovieStatus.Expired;
+
+                    movie.Id = movieVMEdit.Id;
+                    movie.Name = movieVMEdit.Name;
+                    movie.Description = movieVMEdit.Description;
+                    movie.Price = movieVMEdit.Price;
+                    movie.TrailerUrl = movieVMEdit.TrailerUrl;
+                    movie.StartDate = movieVMEdit.StartDate;
+                    movie.EndDate = movieVMEdit.EndDate;
+                    movie.CategoryId = movieVMEdit.CategoryId;
+                    movie.CinemaId = movieVMEdit.CinemaId;
+
+                }
+                else
+                {
+                    if (movieVMEdit.EndDate <= movieVMEdit.StartDate)
+                        ModelState.AddModelError(string.Empty, " the end date can't be before the start date ");
+                    if (movieVMEdit.EndDate < DateTime.Now)
+                        ModelState.AddModelError(string.Empty, " the end date can't be before today date ");
+                    var categories = categoryRepository.Get();
+                    var cinemas = cinemaRepository.Get();
+                    var actors = actorRepository.Get();
+                    ViewBag.cinemas = cinemas;
+                    ViewBag.categories = categories;
+                    ViewBag.actors = actors;
+                    return View(movieVMEdit);
+                }
+
                 movieRepository.Edit(movie);
                 movieRepository.Commit();
-                return RedirectToAction("Index");
+
+                var actorsmovies = actorMovieRepository.Get(expression: e=>e.MovieId==movie.Id ,tracked:false);
+                foreach (var item in actorsmovies)
+                {
+                    bool chechActorStillIn = false;
+                    foreach(var actorId in actorsIds)
+                    {
+                        if(item.ActorId == actorId)
+                        {
+                            chechActorStillIn = true;
+                            actorsIds.Remove(actorId);
+                            break;
+                        }      
+                    }
+                    if(chechActorStillIn == false)
+                    {
+                        actorMovieRepository.Delete(new() { ActorId = item.ActorId, MovieId = movie.Id });
+                        actorMovieRepository.Commit();
+                    }
+                }
+                var actorMovie= new ActorMovie(){ MovieId = movie.Id };
+                foreach(var actorId in actorsIds)
+                {
+                    actorMovie.ActorId = actorId;
+                    actorMovieRepository.Create(actorMovie);
+                    actorMovieRepository.Commit();
+                }
+                return RedirectToAction("index");
             }
-            return View(movieVM);
+            else
+            {
+
+                var categories = categoryRepository.Get();
+                var cinemas = cinemaRepository.Get();
+                var actors = actorRepository.Get();
+                ViewBag.cinemas = cinemas;
+                ViewBag.categories = categories;
+                ViewBag.actors = actors;
+                return View(movieVMEdit);
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ETickets.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class //, IDisposable
+    public class Repository<T> : IRepository<T> where T : class 
     {
         private readonly ApplicationDbContext dbContext;
         private DbSet<T> dbSet;
@@ -68,24 +68,6 @@ namespace ETickets.Repository
             dbContext.SaveChanges();
         }
 
-        //private bool disposed = false;
 
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!this.disposed)
-        //    {
-        //        if (disposing)
-        //        {
-        //            dbContext.Dispose();
-        //        }
-        //    }
-        //    this.disposed = true;
-        //}
-
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
     }
 }
