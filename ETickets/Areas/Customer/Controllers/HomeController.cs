@@ -50,6 +50,11 @@ namespace ETickets.Areas.Customer.Controllers
                 , e => e.Category,e => e.Cinema ], expression: e => e.Id == id);
             return View(acotrsmovies);
         }
+        public IActionResult Notfound()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {

@@ -152,6 +152,9 @@ namespace ETickets.Areas.Admin.Controllers
         public IActionResult Edit(int id)
         {
             var movie = movieRepository.GetOne(expression: e => e.Id == id , includeProps: [e=>e.Actors , e=>e.Category , e => e.Cinema]);
+           if(movie !=null)
+            {
+
             var movieVMEdit = new MovieVMEdit()
             {
                 Id = movie.Id,
@@ -174,6 +177,8 @@ namespace ETickets.Areas.Admin.Controllers
             ViewBag.categories = categories;
             ViewBag.actors = actors;
             return View(movieVMEdit);
+            }
+            return RedirectToAction("NotFound", "Home", new { area = "Customer" });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -208,13 +213,33 @@ namespace ETickets.Areas.Admin.Controllers
                     }
                     movie.ImgUrl = fileName;
 
+
+                    //string oldName = Path.GetFileName(movie.ImgUrl);
+                    //string extention = Path.GetExtension(file.FileName);
+                    //string fileName = oldName + extention;
+
+
+                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", fileName);
+
+                    //using (var stream = System.IO.File.Create(filePath))
+                    //{
+                    //    file.CopyTo(stream);
+                    //}
+                    //string oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", movie.ImgUrl);
+                    //if (System.IO.File.Exists(oldFilePath))
+                    //{
+                    //    System.IO.File.Delete(oldFilePath);
+                    //}
+                    //movie.ImgUrl = fileName;
+
+
                 }
                 else
                 {
                    movie.ImgUrl=movieVMEdit.ImgUrl;
                 }
 
-                if (movieVMEdit.EndDate > DateTime.Now && movieVMEdit.EndDate > movieVMEdit.StartDate)
+                if ( movieVMEdit.EndDate > movieVMEdit.StartDate)
                 {
                     if (movie.StartDate > DateTime.Now)
                         movie.MovieStatus = MovieStatus.Upcoming;
@@ -246,12 +271,13 @@ namespace ETickets.Areas.Admin.Controllers
                     ViewBag.cinemas = cinemas;
                     ViewBag.categories = categories;
                     ViewBag.actors = actors;
+
                     return View(movieVMEdit);
                 }
 
                 movieRepository.Edit(movie);
                 movieRepository.Commit();
-
+                
                 var actorsmovies = actorMovieRepository.Get(expression: e=>e.MovieId==movie.Id ,tracked:false);
                 foreach (var item in actorsmovies)
                 {
@@ -291,6 +317,17 @@ namespace ETickets.Areas.Admin.Controllers
                 ViewBag.actors = actors;
                 return View(movieVMEdit);
             }
+        }
+            public IActionResult Delete(int id) 
+            {
+            var movie= movieRepository.GetOne(expression:e=>e.Id== id);
+            if (movie != null)
+            {
+            movieRepository.Delete(movie);
+            movieRepository.Commit();
+            return RedirectToAction("index");
+            }
+            return RedirectToAction("notfound", "home",new {area="customer"});
         }
     }
 }

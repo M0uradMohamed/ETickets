@@ -13,7 +13,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -100,35 +100,29 @@
                     @{
                         foreach (var item in ViewBag.actors)
                         {
+                            bool isIn = false;
                             foreach (var actor in Model.Actors)
                             {
-
                                 if (actor.Id == item.Id)
                                 {
-
-                                    <option value="@item.Id" selected>@item.FirstName @item.LastName</option>
+                                    isIn = true;
+                                    Model.Actors.Remove(actor);
+                                    break;
                                 }
-                                else
-                                {
-                                    <option value="@item.Id">@item.FirstName @item.LastName</option>
-
-                                }
+                            }
+                            if(isIn==true)
+                            {
+                                <option value="@item.Id" selected>@item.FirstName @item.LastName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.FirstName @item.LastName</option>
                             }
                         }
                     }
                 </select>
             </div> 
 
-@*             <div class="form-group">
-                <label asp-for="CinemaId" class="control-label"></label>
-                <input asp-for="CinemaId" class="form-control" />
-                <span asp-validation-for="CinemaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div> 

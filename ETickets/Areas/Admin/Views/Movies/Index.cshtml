@@ -16,7 +16,7 @@
         </h2>
     </div>
     <div class="col-3">
-        <a href="#" type="button" class="btn btn-danger">
+        <a asp-action="create" type="button" class="btn btn-danger">
             <i class="bi bi-plus-circle"></i> Create New Movie
         </a>
     </div>
@@ -43,7 +43,7 @@
                         <a asp-area="admin" asp-controller="Movies" asp-action="edit" asp-route-id="@item.Id" type="button" class="btn btn-dark">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" data-Movieid="@item.Id">
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" data-movieid="@item.Id">
                             <i class="bi bi-trash3"></i> Delete
                         </button>
                     </td>
@@ -67,12 +67,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this Movie?
+                Are you sure you want to delete this movie ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post" action="/Movie/Delete">
-                    <input type="hidden" name="MovieId" id="MovieIdInput" value="" />
+                <form id="deleteForm" method="post" action="/admin/movies/delete/">
+                    <input type="hidden" name="id" id="movieIdInput" value="" />
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
@@ -84,8 +84,8 @@
     var deleteModal = document.getElementById('deleteModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
-        var MovieId = button.getAttribute('data-Movieid');
-        var input = document.getElementById('MovieIdInput');
-        input.value = MovieId;
+        var id = button.getAttribute('data-movieid');
+        var input = document.getElementById('movieIdInput');
+        input.value = id;
     });
 </script>
