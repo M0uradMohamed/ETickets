@@ -1,0 +1,90 @@
+﻿@model ETickets.Areas.Admin.ViewModels.ActorVM
+
+@{
+    ViewData["Title"] = "create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>create actor</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="create" asp-controller="actors" asp-area="admin" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <!-- Image container -->
+            <div class="mb-3">
+                <label for="Photo" class="form-label">movie Photo</label>
+                <input type="file" class="form-control" id="Photo" name="file" accept="image/*" onchange="previewImage(event)">
+            </div>
+            <div class="mb-3">
+                <!-- Image preview container -->
+                <img id="imagePreview" src="#" alt="Image Preview" style="display:none; width: 200px; height: auto;" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Bio" class="control-label"></label>
+                <input asp-for="Bio" class="form-control" />
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="News" class="control-label"></label>
+                <input asp-for="News" class="form-control" />
+                <span asp-validation-for="News" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="" class="form-label">movies</label>
+                <select class="form-select" name="moviesIds" multiple>
+                    @{
+                        foreach (var item in ViewBag.movies)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        const imagePreview = document.getElementById('imagePreview');
+
+        reader.onload = function () {
+            imagePreview.src = reader.result;
+            imagePreview.style.display = 'block'; // Show the image preview
+        }
+
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            imagePreview.style.display = 'none'; // Hide the preview if no file is selected
+        }
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

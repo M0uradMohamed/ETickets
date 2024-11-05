@@ -323,6 +323,13 @@ namespace ETickets.Areas.Admin.Controllers
             var movie= movieRepository.GetOne(expression:e=>e.Id== id);
             if (movie != null)
             {
+
+                var actormovies = actorMovieRepository.Get(expression: e=>e.MovieId==movie.Id ,tracked:false);
+                foreach (var actorMovie in actormovies)
+                {
+                    actorMovieRepository.Delete(actorMovie);
+                    actorMovieRepository.Commit();
+                }
             movieRepository.Delete(movie);
             movieRepository.Commit();
             return RedirectToAction("index");

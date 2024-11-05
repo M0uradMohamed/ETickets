@@ -9,11 +9,13 @@ namespace ETickets.Areas.Admin.ViewModels
         [ValidateNever]
         public int Id { get; set; }
         [Required]
+        [MinLength(3)]
         public string Name { get; set; }
         [Required]
+        [MinLength(3)]
         public string Description { get; set; }
         [Required]
-        [Range(0,int.MaxValue)]
+        [Range(1,1000,ErrorMessage ="price must be greater than 0")]
         public double Price { get; set; }
  
         [Required]

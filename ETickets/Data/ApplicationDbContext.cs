@@ -30,6 +30,8 @@ namespace ETickets.Data
                 UsingEntity<ActorMovie>().HasKey(j => new { j.MovieId, j.ActorId });
         }
 
+public DbSet<ETickets.Areas.Admin.ViewModels.ActorVM> ActorVM { get; set; } = default!;
+
     }
 }
 
