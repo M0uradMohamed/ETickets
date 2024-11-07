@@ -152,7 +152,20 @@ namespace ETickets.Areas.Admin.Controllers
             }
         }
 
+        public IActionResult Delete(int id)
+        {
+            var cinema = cinemaRepository.GetOne(expression: e => e.Id == id);
+            if (cinema != null)
+            {
+                cinemaRepository.Delete(cinema);
+                cinemaRepository.Commit();
 
+                return RedirectToAction("index");
+            }
+            else
+                return RedirectToAction("NotFound", "Home", new { area = "Customer" });
+
+        }
 
 
     }
