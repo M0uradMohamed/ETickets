@@ -36,6 +36,8 @@ public DbSet<ETickets.Areas.Admin.ViewModels.CategoryVM> CategoryVM { get; set; 
 
 public DbSet<ETickets.Areas.Admin.ViewModels.CinemaVM> CinemaVM { get; set; } = default!;
 
+public DbSet<ETickets.Areas.Admin.ViewModels.CinemaVMEdit> CinemaVMEdit { get; set; } = default!;
+
     }
 }
 

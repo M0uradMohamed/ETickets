@@ -1,31 +1,32 @@
-﻿@model ETickets.Areas.Admin.ViewModels.CinemaVM
+﻿@model ETickets.Areas.Admin.ViewModels.CinemaVMEdit
 
 @{
-    ViewData["Title"] = "create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>create cinema</h1>
+<h1>Edit cinema</h1>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="create" enctype="multipart/form-data">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Image container -->
             <div class="mb-3">
-                <label for="Photo" class="form-label">cinema logo</label>
-                <input type="file" class="form-control" id="Photo" name="file" accept="image/*" onchange="previewImage(event)">
+                <label for="examplePhotoUrl" class="form-label">cinema logo</label>
+                <input type="file" class="form-control" id="examplePhotoUrl" name="file" onchange="previewImage(event)">
             </div>
             <div class="mb-3">
-                <!-- Image preview container -->
-                <img id="imagePreview" src="#" alt="Image Preview" style="display:none; width: 200px; height: auto;" />
+                <img id="imagePreview" src="~/images/cinemasLogo/@Model.CinemaLogo" alt="Image Preview" style="width: 200px; height: auto;" />
             </div>
+
+            <input asp-for="CinemaLogo" type="hidden" />
 
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -38,7 +39,7 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -47,6 +48,7 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
 <script>
     function previewImage(event) {
         const reader = new FileReader();
@@ -64,6 +66,7 @@
         }
     }
 </script>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

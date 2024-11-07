@@ -48,7 +48,7 @@ namespace ETickets.Areas.Admin.Controllers
             var category = categoryRepository.GetOne(expression:e=>e.Id == id);
             if (category != null)
             {
-                var categoryVM = new CategoryVM() {  Name = category.Name };
+                var categoryVM = new CategoryVM() { Id=category.Id , Name = category.Name };
                 return View(categoryVM);
             }
             else
