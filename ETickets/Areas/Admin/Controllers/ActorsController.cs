@@ -13,8 +13,8 @@ namespace ETickets.Areas.Admin.Controllers
         private readonly IMovieRepository movieRepository;
         private readonly IActorMovieRepository actorMovieRepository;
 
-        public ActorsController(IActorRepository actorRepository , IMovieRepository movieRepository
-            ,IActorMovieRepository actorMovieRepository)
+        public ActorsController(IActorRepository actorRepository, IMovieRepository movieRepository
+            , IActorMovieRepository actorMovieRepository)
         {
             this.actorRepository = actorRepository;
             this.movieRepository = movieRepository;
@@ -29,7 +29,7 @@ namespace ETickets.Areas.Admin.Controllers
         public IActionResult create()
         {
             var movies = movieRepository.Get();
-            ViewBag.movies= movies;
+            ViewBag.movies = movies;
             return View();
         }
         [HttpPost]
@@ -89,7 +89,7 @@ namespace ETickets.Areas.Admin.Controllers
                     actorMovieRepository.Commit();
                 }
 
-               return RedirectToAction("Index", "actors" , new  {area="admin" });
+                return RedirectToAction("Index", "actors", new { area = "admin" });
 
             }
             else
@@ -99,5 +99,136 @@ namespace ETickets.Areas.Admin.Controllers
                 return View(actorVM);
             }
         }
+        public IActionResult Edit(int id)
+        {
+            var actor = actorRepository.GetOne(expression: e => e.Id == id, includeProps: [e => e.Movies]);
+            if (actor != null)
+            {
+                var actorVMEdit = new ActorVMEdit()
+                {
+                    Id = actor.Id,
+                    FirstName = actor.FirstName,
+                    LastName = actor.LastName,
+                    Bio = actor.Bio,
+                    News = actor.News,
+                    Movies = actor.Movies,
+                    ProfilePicture = actor.ProfilePicture,
+                };
+
+                var movies = movieRepository.Get();
+                ViewBag.movies = movies;
+                return View(actorVMEdit);
+            }
+            else
+                return RedirectToAction("NotFound", "Home", new { area = "Customer" });
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(ActorVMEdit actorVMEdit, IFormFile file, List<int> moviesIds)
+        {
+            ModelState.Remove("file");
+            ModelState.Remove("moviesIds");
+            if (ModelState.IsValid)
+            {
+                var actor = new Actor();
+                if (file != null)
+                {
+
+                    string random = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(file.FileName);
+
+
+                    string fileName = random + extension;
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\cast", fileName);
+
+                    string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\cast");
+
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    actor.ProfilePicture = fileName;
+
+                }
+                else
+                {
+                    actor.ProfilePicture=actorVMEdit.ProfilePicture;
+                }
+
+                actor.Id = actorVMEdit.Id;
+                actor.FirstName = actorVMEdit.FirstName;
+                actor.LastName = actorVMEdit.LastName;
+                actor.Bio=actorVMEdit.Bio;
+                actor.News = actorVMEdit.News;
+
+
+                actorRepository.Edit(actor);
+                actorRepository.Commit();
+
+
+                var actorsmovies = actorMovieRepository.Get(expression: e => e.ActorId == actor.Id, tracked: false);
+                foreach (var item in actorsmovies)
+                {
+                    bool chechmovieStillIn = false;
+                    foreach (var movieId in moviesIds)
+                    {
+                        if (item.MovieId == movieId)
+                        {
+                            chechmovieStillIn = true;
+                            moviesIds.Remove(movieId);
+                            break;
+                        }
+                    }
+                    if (chechmovieStillIn == false)
+                    {
+                        actorMovieRepository.Delete(new() { MovieId = item.MovieId, ActorId = actor.Id });
+                        actorMovieRepository.Commit();
+                    }
+                }
+                var actorMovie = new ActorMovie() { ActorId = actor.Id };
+                foreach (var movieId in moviesIds)
+                {
+                    actorMovie.MovieId = movieId;
+                    actorMovieRepository.Create(actorMovie);
+                    actorMovieRepository.Commit();
+                }
+                return RedirectToAction("index");
+
+            }
+            else
+            {
+                var movies = movieRepository.Get();
+                ViewBag.movies = movies;
+                return View(actorVMEdit);
+            }
+
+        }
+        public IActionResult Delete(int id)
+        {
+            var actor = actorRepository.GetOne(expression: e => e.Id == id);
+            if (actor != null)
+            {
+
+                var actormovies = actorMovieRepository.Get(expression: e => e.ActorId == actor.Id, tracked: false);
+                foreach (var actorMovie in actormovies)
+                {
+                    actorMovieRepository.Delete(actorMovie);
+                    actorMovieRepository.Commit();
+                }
+                actorRepository.Delete(actor);
+                actorRepository.Commit();
+                return RedirectToAction("index");
+            }
+            return RedirectToAction("notfound", "home", new { area = "customer" });
+        }
+
     }
+
 }

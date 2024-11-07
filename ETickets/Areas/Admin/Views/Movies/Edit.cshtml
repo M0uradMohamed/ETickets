@@ -55,8 +55,8 @@
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
+
             <input asp-for="ImgUrl" type="hidden" />
-            <input asp-for="Id" type="hidden" />
 
             <div>
                 <label for="" class="form-label">Cinema</label>
@@ -74,7 +74,7 @@
                             }
                         }
                     }
-                </select> 
+                </select>
             </div>
             <div class="mb-3">
                 <label for="" class="form-label">Category</label>
@@ -94,23 +94,28 @@
                     }
                 </select>
             </div>
-          <div class="mb-3">
+
+            <div class="mb-3">
                 <label for="" class="form-label">actors</label>
                 <select class="form-select" name="actorsIds" multiple>
                     @{
                         foreach (var item in ViewBag.actors)
                         {
                             bool isIn = false;
-                            foreach (var actor in Model.Actors)
+                            if (Model.Actors != null)
                             {
-                                if (actor.Id == item.Id)
+
+                                foreach (var actor in Model.Actors)
                                 {
-                                    isIn = true;
-                                    Model.Actors.Remove(actor);
-                                    break;
+                                    if (actor.Id == item.Id)
+                                    {
+                                        isIn = true;
+                                        Model.Actors.Remove(actor);
+                                        break;
+                                    }
                                 }
                             }
-                            if(isIn==true)
+                            if (isIn == true)
                             {
                                 <option value="@item.Id" selected>@item.FirstName @item.LastName</option>
                             }
@@ -121,11 +126,11 @@
                         }
                     }
                 </select>
-            </div> 
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-            </div> 
+            </div>
         </form>
     </div>
 </div>

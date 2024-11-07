@@ -1,17 +1,18 @@
-﻿@model ETickets.Areas.Admin.ViewModels.ActorVM
+﻿@using ETickets.Areas.Admin.ViewModels
+@model ActorVMEdit
 
 @{
-    ViewData["Title"] = "create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>create actor</h1>
-
+<h1>Edit actor</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="create" asp-controller="actors" asp-area="admin" enctype="multipart/form-data">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -23,15 +24,14 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
-            <!-- Image container -->
             <div class="mb-3">
-                <label for="Photo" class="form-label">movie Photo</label>
-                <input type="file" class="form-control" id="Photo" name="file" accept="image/*" onchange="previewImage(event)">
+                <label for="examplePhotoUrl" class="form-label">movie image</label>
+                <input type="file" class="form-control" id="examplePhotoUrl" name="file" onchange="previewImage(event)">
             </div>
             <div class="mb-3">
-                <!-- Image preview container -->
-                <img id="imagePreview" src="#" alt="Image Preview" style="display:none; width: 200px; height: auto;" />
+                <img id="imagePreview" src="~/images/cast/@Model.ProfilePicture" alt="Image Preview" style="width: 200px; height: auto;" />
             </div>
+
 
             <div class="form-group">
                 <label asp-for="Bio" class="control-label"></label>
@@ -44,21 +44,43 @@
                 <span asp-validation-for="News" class="text-danger"></span>
             </div>
 
+            <input asp-for="ProfilePicture" type="hidden" />
+
             <div class="mb-3">
                 <label for="" class="form-label">movies</label>
                 <select class="form-select" name="moviesIds" multiple>
                     @{
                         foreach (var item in ViewBag.movies)
                         {
-                            <option value="@item.Id">@item.Name</option>
+                            bool isIn = false;
+                            if (Model.Movies != null)
+                            {
+
+                                foreach (var movie in Model.Movies)
+                                {
+                                    if (movie.Id == item.Id)
+                                    {
+                                        isIn = true;
+                                        Model.Movies.Remove(movie);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (isIn == true)
+                            {
+                                <option value="@item.Id" selected>@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
                         }
                     }
                 </select>
             </div>
 
-
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -84,7 +106,6 @@
         }
     }
 </script>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

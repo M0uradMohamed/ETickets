@@ -18,8 +18,8 @@ namespace ETickets.Areas.Admin.Controllers
         private readonly IActorMovieRepository actorMovieRepository;
 
         public MoviesController(IMovieRepository movieRepository, ICinemaRepository cinemaRepository
-            , ICategoryRepository categoryRepository ,IActorRepository actorRepository 
-            ,IActorMovieRepository actorMovieRepository )
+            , ICategoryRepository categoryRepository, IActorRepository actorRepository
+            , IActorMovieRepository actorMovieRepository)
         {
             this.movieRepository = movieRepository;
             this.cinemaRepository = cinemaRepository;
@@ -45,7 +45,7 @@ namespace ETickets.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult create(MovieVM movieVM, IFormFile file , List<int> actorsIds)
+        public IActionResult create(MovieVM movieVM, IFormFile file, List<int> actorsIds)
         {
             ModelState.Remove("file");
             ModelState.Remove("actorsIds");
@@ -104,7 +104,7 @@ namespace ETickets.Areas.Admin.Controllers
                     movie.TrailerUrl = movieVM.TrailerUrl;
                     movie.StartDate = movieVM.StartDate;
                     movie.EndDate = movieVM.EndDate;
-                    movie.CategoryId= movieVM.CategoryId;
+                    movie.CategoryId = movieVM.CategoryId;
                     movie.CinemaId = movieVM.CinemaId;
 
                 }
@@ -112,7 +112,7 @@ namespace ETickets.Areas.Admin.Controllers
                 {
                     if (movieVM.EndDate <= movieVM.StartDate)
                         ModelState.AddModelError(string.Empty, " the end date can't be before the start date ");
-                              if (movieVM.EndDate < DateTime.Now)
+                    if (movieVM.EndDate < DateTime.Now)
                         ModelState.AddModelError(string.Empty, " the end date can't be before today date ");
                     var categories = categoryRepository.Get();
                     var cinemas = cinemaRepository.Get();
@@ -127,56 +127,56 @@ namespace ETickets.Areas.Admin.Controllers
                 movieRepository.Commit();
 
                 var actormovie = new ActorMovie();
-                actormovie.MovieId=movie.Id;
-                foreach(var item in actorsIds)
+                actormovie.MovieId = movie.Id;
+                foreach (var item in actorsIds)
                 {
                     actormovie.ActorId = item;
                     actorMovieRepository.Create(actormovie);
-                actorMovieRepository.Commit();
+                    actorMovieRepository.Commit();
                 }
 
-            return RedirectToAction("index");
+                return RedirectToAction("index");
             }
             else
             {
 
-            var categories = categoryRepository.Get();
-            var cinemas = cinemaRepository.Get();
-            var actors = actorRepository.Get();
-            ViewBag.cinemas = cinemas;
-            ViewBag.categories = categories;
-            ViewBag.actors = actors;
-            return View(movieVM);
+                var categories = categoryRepository.Get();
+                var cinemas = cinemaRepository.Get();
+                var actors = actorRepository.Get();
+                ViewBag.cinemas = cinemas;
+                ViewBag.categories = categories;
+                ViewBag.actors = actors;
+                return View(movieVM);
             }
         }
         public IActionResult Edit(int id)
         {
-            var movie = movieRepository.GetOne(expression: e => e.Id == id , includeProps: [e=>e.Actors , e=>e.Category , e => e.Cinema]);
-           if(movie !=null)
+            var movie = movieRepository.GetOne(expression: e => e.Id == id, includeProps: [e => e.Actors, e => e.Category, e => e.Cinema]);
+            if (movie != null)
             {
 
-            var movieVMEdit = new MovieVMEdit()
-            {
-                Id = movie.Id,
-                Name = movie.Name,
-                Description = movie.Description,
-                StartDate = movie.StartDate,
-                EndDate = movie.EndDate,
-                Price = movie.Price,
-                TrailerUrl = movie.TrailerUrl,
-                ImgUrl = movie.ImgUrl,
-                CategoryId = movie.CategoryId,
-                CinemaId = movie.CinemaId,
-                Actors = movie.Actors,
+                var movieVMEdit = new MovieVMEdit()
+                {
+                    Id = movie.Id,
+                    Name = movie.Name,
+                    Description = movie.Description,
+                    StartDate = movie.StartDate,
+                    EndDate = movie.EndDate,
+                    Price = movie.Price,
+                    TrailerUrl = movie.TrailerUrl,
+                    ImgUrl = movie.ImgUrl,
+                    CategoryId = movie.CategoryId,
+                    CinemaId = movie.CinemaId,
+                    Actors = movie.Actors,
 
-            };
-            var categories = categoryRepository.Get();
-            var cinemas = cinemaRepository.Get();
-            var actors = actorRepository.Get();
-            ViewBag.cinemas = cinemas;
-            ViewBag.categories = categories;
-            ViewBag.actors = actors;
-            return View(movieVMEdit);
+                };
+                var categories = categoryRepository.Get();
+                var cinemas = cinemaRepository.Get();
+                var actors = actorRepository.Get();
+                ViewBag.cinemas = cinemas;
+                ViewBag.categories = categories;
+                ViewBag.actors = actors;
+                return View(movieVMEdit);
             }
             return RedirectToAction("NotFound", "Home", new { area = "Customer" });
         }
@@ -212,34 +212,13 @@ namespace ETickets.Areas.Admin.Controllers
                         file.CopyTo(stream);
                     }
                     movie.ImgUrl = fileName;
-
-
-                    //string oldName = Path.GetFileName(movie.ImgUrl);
-                    //string extention = Path.GetExtension(file.FileName);
-                    //string fileName = oldName + extention;
-
-
-                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", fileName);
-
-                    //using (var stream = System.IO.File.Create(filePath))
-                    //{
-                    //    file.CopyTo(stream);
-                    //}
-                    //string oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\movies", movie.ImgUrl);
-                    //if (System.IO.File.Exists(oldFilePath))
-                    //{
-                    //    System.IO.File.Delete(oldFilePath);
-                    //}
-                    //movie.ImgUrl = fileName;
-
-
                 }
                 else
                 {
-                   movie.ImgUrl=movieVMEdit.ImgUrl;
+                    movie.ImgUrl = movieVMEdit.ImgUrl;
                 }
 
-                if ( movieVMEdit.EndDate > movieVMEdit.StartDate)
+                if (movieVMEdit.EndDate > movieVMEdit.StartDate)
                 {
                     if (movie.StartDate > DateTime.Now)
                         movie.MovieStatus = MovieStatus.Upcoming;
@@ -277,28 +256,28 @@ namespace ETickets.Areas.Admin.Controllers
 
                 movieRepository.Edit(movie);
                 movieRepository.Commit();
-                
-                var actorsmovies = actorMovieRepository.Get(expression: e=>e.MovieId==movie.Id ,tracked:false);
+
+                var actorsmovies = actorMovieRepository.Get(expression: e => e.MovieId == movie.Id, tracked: false);
                 foreach (var item in actorsmovies)
                 {
                     bool chechActorStillIn = false;
-                    foreach(var actorId in actorsIds)
+                    foreach (var actorId in actorsIds)
                     {
-                        if(item.ActorId == actorId)
+                        if (item.ActorId == actorId)
                         {
                             chechActorStillIn = true;
                             actorsIds.Remove(actorId);
                             break;
-                        }      
+                        }
                     }
-                    if(chechActorStillIn == false)
+                    if (chechActorStillIn == false)
                     {
                         actorMovieRepository.Delete(new() { ActorId = item.ActorId, MovieId = movie.Id });
                         actorMovieRepository.Commit();
                     }
                 }
-                var actorMovie= new ActorMovie(){ MovieId = movie.Id };
-                foreach(var actorId in actorsIds)
+                var actorMovie = new ActorMovie() { MovieId = movie.Id };
+                foreach (var actorId in actorsIds)
                 {
                     actorMovie.ActorId = actorId;
                     actorMovieRepository.Create(actorMovie);
@@ -318,23 +297,23 @@ namespace ETickets.Areas.Admin.Controllers
                 return View(movieVMEdit);
             }
         }
-            public IActionResult Delete(int id) 
-            {
-            var movie= movieRepository.GetOne(expression:e=>e.Id== id);
+        public IActionResult Delete(int id)
+        {
+            var movie = movieRepository.GetOne(expression: e => e.Id == id);
             if (movie != null)
             {
 
-                var actormovies = actorMovieRepository.Get(expression: e=>e.MovieId==movie.Id ,tracked:false);
+                var actormovies = actorMovieRepository.Get(expression: e => e.MovieId == movie.Id, tracked: false);
                 foreach (var actorMovie in actormovies)
                 {
                     actorMovieRepository.Delete(actorMovie);
                     actorMovieRepository.Commit();
                 }
-            movieRepository.Delete(movie);
-            movieRepository.Commit();
-            return RedirectToAction("index");
+                movieRepository.Delete(movie);
+                movieRepository.Commit();
+                return RedirectToAction("index");
             }
-            return RedirectToAction("notfound", "home",new {area="customer"});
+            return RedirectToAction("notfound", "home", new { area = "customer" });
         }
     }
 }

@@ -32,6 +32,10 @@ namespace ETickets.Data
 
 public DbSet<ETickets.Areas.Admin.ViewModels.ActorVM> ActorVM { get; set; } = default!;
 
+public DbSet<ETickets.Areas.Admin.ViewModels.CategoryVM> CategoryVM { get; set; } = default!;
+
+public DbSet<ETickets.Areas.Admin.ViewModels.CinemaVM> CinemaVM { get; set; } = default!;
+
     }
 }
 

@@ -6,7 +6,7 @@
 <div class="card mb-3">
     <div class="row g-1">
         <div class="col-md-6">
-            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="...">
+            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="..." height="670" width="1000">
         </div>
         <div class="col-md-6">
             <div class="card-body">
@@ -23,7 +23,7 @@
                         <form asp-action="Index" asp-controller="Actors" asp-route-actorname="@item.FirstName @item.LastName" class="me-2" id="actorForm-@item.Id">
                             <input name="Id" value="@item.Id" type="hidden" />
                             <a href="#" onclick="document.getElementById('actorForm-@item.Id').submit();">
-                                <img src="~/images/cast/@item.ProfilePicture" class="img-fluid" />
+                                <img src="~/images/cast/@item.ProfilePicture" class="img-fluid" height="50" width="50" />
                             </a>
                         </form>
 

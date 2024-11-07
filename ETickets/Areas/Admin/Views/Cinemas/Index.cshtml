@@ -1,9 +1,9 @@
-﻿@using ETickets.Models;
- @model IEnumerable<Movie>
+﻿@model IEnumerable<ETickets.Models.Cinema>
+
 @{
-    ViewData["Title"] = "index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Index";
 }
+
 <div class="row">
     <div class="col-9 mb-3">
 
@@ -12,12 +12,12 @@
             <a href="#" type="button">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            All Categories
+            All Cinemas
         </h2>
     </div>
     <div class="col-3">
         <a asp-action="create" type="button" class="btn btn-danger">
-            <i class="bi bi-plus-circle"></i> Create New Movie
+            <i class="bi bi-plus-circle"></i> Create New Cinema
         </a>
     </div>
 </div>
@@ -27,11 +27,10 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Movie Name</th>
-                <th scope="col">category Name</th>
-                <th scope="col">cinema Name</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
                 <th scope="col">Actions</th>
-                <th scope="col">details</th>
+                <th scope="col">all movies</th>
             </tr>
         </thead>
         <tbody>
@@ -40,19 +39,18 @@
                 <tr class="table-light">
                     <th scope="row">@item.Id</th>
                     <td>@item.Name</td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Cinema.Name</td>
+                    <td>@item.Address</td>
                     <td>
-                        <a asp-area="admin" asp-controller="Movies" asp-action="edit" asp-route-id="@item.Id" type="button" class="btn btn-dark">
+                        <a asp-area="admin" asp-controller="cinemas" asp-action="edit" asp-route-id="@item.Id" type="button" class="btn btn-dark">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" data-movieid="@item.Id">
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" data-actorid="@item.Id">
                             <i class="bi bi-trash3"></i> Delete
                         </button>
                     </td>
                     <td>
-                        <a asp-action="details" asp-controller="home" asp-area="customer" asp-route-Id="@item.Id" type="button" class="btn btn-dark" style="background:rgb(51, 141, 255 ) ">
-                            <i class="bi bi-pencil-square"></i> view  details
+                        <a asp-action="movies" asp-area="customer" asp-controller="cinemas" asp-route-Id="@item.Id" type="button" class="btn btn-dark" style="background:rgb(51, 141, 255 ) ">
+                            <i class="bi bi-pencil-square"></i> All movies
                         </a>
                     </td>
                 </tr>
@@ -70,12 +68,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this movie ?
+                Are you sure you want to delete this cinema ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post" action="/admin/movies/delete/">
-                    <input type="hidden" name="id" id="movieIdInput" value="" />
+                <form id="deleteForm" method="post" action="/admin/cinemas/delete/">
+                    <input type="hidden" name="id" id="actorIdInput" value="" />
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
@@ -87,8 +85,8 @@
     var deleteModal = document.getElementById('deleteModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
-        var id = button.getAttribute('data-movieid');
-        var input = document.getElementById('movieIdInput');
+        var id = button.getAttribute('data-actorid');
+        var input = document.getElementById('actorIdInput');
         input.value = id;
     });
 </script>

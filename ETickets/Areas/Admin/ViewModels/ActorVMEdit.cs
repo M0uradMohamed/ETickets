@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ETickets.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace ETickets.Areas.Admin.ViewModels
 {
-    public class ActorVM
+    public class ActorVMEdit
     {
         public int Id { get; set; }
         [Required]
@@ -13,12 +15,15 @@ namespace ETickets.Areas.Admin.ViewModels
         [MinLength(3)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
         [Required]
         [MinLength(3)]
+
+        public string ProfilePicture { get; set; }
         public string Bio { get; set; }
         [Required]
         [MinLength(3)]
         public string News { get; set; }
+        [ValidateNever]
+        public List<Movie> Movies { get; set; }
     }
 }
