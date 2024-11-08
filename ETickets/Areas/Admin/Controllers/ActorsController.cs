@@ -2,11 +2,14 @@
 using ETickets.Models;
 using ETickets.Repository;
 using ETickets.Repository.IRepository;
+using ETickets.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles =SD.adminRole)]
     public class ActorsController : Controller
     {
         private readonly IActorRepository actorRepository;

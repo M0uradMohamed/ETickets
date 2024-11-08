@@ -3,6 +3,7 @@ using ETickets.Repository.IRepository;
 using ETickets.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ETickets
 {
@@ -19,7 +20,10 @@ namespace ETickets
             builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+
 
             builder.Services.AddScoped<IActorMovieRepository, ActorMovieRepository>();
             builder.Services.AddScoped<IActorRepository, ActorRepository>();

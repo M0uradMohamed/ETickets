@@ -5,10 +5,13 @@ using ETickets.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using ETickets.Repository;
+using ETickets.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ETickets.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.adminRole)]
     public class MoviesController : Controller
     {
         private readonly IMovieRepository movieRepository;
