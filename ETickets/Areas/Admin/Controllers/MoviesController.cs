@@ -91,9 +91,9 @@ namespace ETickets.Areas.Admin.Controllers
 
                 if (movieVM.EndDate > DateTime.Now && movieVM.EndDate > movieVM.StartDate)
                 {
-                    if (movie.StartDate > DateTime.Now)
+                    if (movieVM.StartDate > DateTime.Now)
                         movie.MovieStatus = MovieStatus.Upcoming;
-                    else if (movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
+                    else if (movieVM.StartDate <= DateTime.Now && movieVM.EndDate >= DateTime.Now)
                         movie.MovieStatus = MovieStatus.Available;
                     else
                         movie.MovieStatus = MovieStatus.Expired;

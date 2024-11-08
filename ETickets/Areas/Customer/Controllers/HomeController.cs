@@ -46,9 +46,22 @@ namespace ETickets.Areas.Customer.Controllers
         }
         public IActionResult Details(int id)
         {
-            var acotrsmovies = movieRepository.GetOne(includeProps: [e => e.Actors
+            var movie = movieRepository.GetOne(includeProps: [e => e.Actors
                 , e => e.Category,e => e.Cinema ], expression: e => e.Id == id);
-            return View(acotrsmovies);
+            if (movie != null)
+            {
+
+                if (movie.StartDate > DateTime.Now)
+                    movie.MovieStatus = MovieStatus.Upcoming;
+                else if (movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)
+                    movie.MovieStatus = MovieStatus.Available;
+                else
+                    movie.MovieStatus = MovieStatus.Expired;
+
+                return View(movie);
+            }
+            else
+                return RedirectToAction("NotFound", "Home", new { area = "Customer" });
         }
         public IActionResult Notfound()
         {
