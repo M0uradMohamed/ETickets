@@ -16,7 +16,8 @@ namespace ETickets.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OrderItem> OrderedItems { get; set; }
+        
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -28,15 +29,11 @@ namespace ETickets.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Movie>().HasMany(m => m.Actors).WithMany(a => a.Movies).
                 UsingEntity<ActorMovie>().HasKey(j => new { j.MovieId, j.ActorId });
+
+            modelBuilder.Entity<Movie>().HasMany(m => m.users).WithMany(u => u.movies)
+               .UsingEntity<OrderItem>().HasKey(j => new { j.MovieId, j.ApplicationUserId });
         }
 
-public DbSet<ETickets.Areas.Admin.ViewModels.ActorVM> ActorVM { get; set; } = default!;
-
-public DbSet<ETickets.Areas.Admin.ViewModels.CategoryVM> CategoryVM { get; set; } = default!;
-
-public DbSet<ETickets.Areas.Admin.ViewModels.CinemaVM> CinemaVM { get; set; } = default!;
-
-public DbSet<ETickets.Areas.Admin.ViewModels.CinemaVMEdit> CinemaVMEdit { get; set; } = default!;
 
     }
 }

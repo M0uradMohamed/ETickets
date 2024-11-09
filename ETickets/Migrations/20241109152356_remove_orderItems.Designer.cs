@@ -4,6 +4,7 @@ using ETickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109152356_remove_orderItems")]
+    partial class remove_orderItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace ETickets.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ApplicationUserMovie", b =>
+                {
+                    b.Property<int>("moviesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("usersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("moviesId", "usersId");
+
+                    b.HasIndex("usersId");
+
+                    b.ToTable("ApplicationUserMovie");
+                });
 
             modelBuilder.Entity("ETickets.Models.Actor", b =>
                 {
@@ -168,24 +186,6 @@ namespace ETickets.Migrations
                     b.HasIndex("CinemaId");
 
                     b.ToTable("Movies");
-                });
-
-            modelBuilder.Entity("ETickets.Models.OrderItem", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("count")
-                        .HasColumnType("int");
-
-                    b.HasKey("MovieId", "ApplicationUserId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("OrderedItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -410,6 +410,21 @@ namespace ETickets.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("ApplicationUserMovie", b =>
+                {
+                    b.HasOne("ETickets.Models.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("moviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ETickets.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("usersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ETickets.Models.ActorMovie", b =>
                 {
                     b.HasOne("ETickets.Models.Actor", null)
@@ -442,25 +457,6 @@ namespace ETickets.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Cinema");
-                });
-
-            modelBuilder.Entity("ETickets.Models.OrderItem", b =>
-                {
-                    b.HasOne("ETickets.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ETickets.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

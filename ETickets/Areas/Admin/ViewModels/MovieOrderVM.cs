@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using ETickets.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace ETickets.Models
+namespace ETickets.Areas.Admin.ViewModels
 {
-    public class Movie
+    public class MovieOrderVM
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,15 +15,13 @@ namespace ETickets.Models
         public DateTime EndDate { get; set; }
         public MovieStatus MovieStatus { get; set; }
         public int Quantity { get; set; }
-
         public int CinemaId { get; set; }
         public int CategoryId { get; set; }
-
+        [Required]
+        [Range(1, 100)]
+        public int count { get; set; }
         public Cinema Cinema { get; set; }
         public Category Category { get; set; }
         public List<Actor> Actors { get; set; }
-        public List<ApplicationUser> users { get;set; }
-
-
     }
 }

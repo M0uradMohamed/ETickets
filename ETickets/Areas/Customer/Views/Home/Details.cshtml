@@ -1,4 +1,5 @@
-﻿@model Movie
+﻿@using ETickets.Areas.Admin.ViewModels
+@model MovieOrderVM
 @{
     if (Model.MovieStatus == MovieStatus.Upcoming)
     {
@@ -13,7 +14,7 @@
         <h4><span class="badge bg-danger">@Model.MovieStatus</span></h4>
     }
 }
-
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1 class="card-title">@Model.Name</h1>
 <div class="card mb-3">
     <div class="row g-1">
@@ -51,11 +52,25 @@
                 @{
                     if (Model.MovieStatus == MovieStatus.Available)
                     {
-                        <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:green">book ticket</a>
+                       // <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:green">book ticket</a>
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="background-color:green" data-bs-target="#exampleModal">
+                            book ticket
+                        </button>
+
                     }
                     else if (Model.MovieStatus == MovieStatus.Upcoming)
                     {
-                        <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:cornflowerblue ">book ticket</a>
+                      //  <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:cornflowerblue ">book ticket</a>
+                       
+                      
+                      <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="background-color:cornflowerblue" data-bs-target="#exampleModal">
+                            book ticket
+                        </button>
+
+
                     }
                     else
                     {
@@ -66,3 +81,59 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">book tickets</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h1 class="card-title">@Model.Name</h1>
+                <div class="card mb-3">
+                    <div class="row g-1">
+                        <div class="col-md-6">
+                            <img src="~/images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="..." height="670" width="1000">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <p>Price: @Model.Price</p>
+                                <p>cinema: @Model.Cinema.Name</p>
+                                <form asp-area="customer" asp-controller="cart" asp-action="addToCart" id="ticketForm">
+                                    <label for="count" class="form-label">Number of tickets</label>
+                                    <input asp-for="count" type="number" value="1" />
+                                    <input asp-for="Id" type="hidden"/>
+                                    <span asp-validation-for="count"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Buy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    function submitForm() {
+        var form = document.getElementById('ticketForm');
+
+        // Check if the form is valid using jQuery validation
+        if ($(form).valid()) {
+            form.submit();
+        }
+    }
+</script>

@@ -1,3 +1,4 @@
+using ETickets.Areas.Admin.ViewModels;
 using ETickets.Data;
 using ETickets.Models;
 using ETickets.Repository.IRepository;
@@ -68,7 +69,26 @@ namespace ETickets.Areas.Customer.Controllers
                 else
                     movie.MovieStatus = MovieStatus.Expired;
 
-                return View(movie);
+                var movieOrderVM = new MovieOrderVM()
+                {
+                    Id = movie.Id,
+                    Name = movie.Name,
+                    Description = movie.Description,
+                    Price = movie.Price,
+                    ImgUrl = movie.ImgUrl,
+                    TrailerUrl = movie.TrailerUrl,
+                    StartDate = movie.StartDate,
+                    EndDate = movie.EndDate,
+                    MovieStatus = movie.MovieStatus,
+                    Quantity = movie.Quantity,
+                    CategoryId = movie.CategoryId,
+                    CinemaId = movie.CinemaId,
+                    Category = movie.Category,
+                    Cinema = movie.Cinema,
+                    Actors= movie.Actors
+                };
+
+                return View(movieOrderVM);
             }
             else
                 return RedirectToAction("NotFound", "Home", new { area = "Customer" });
