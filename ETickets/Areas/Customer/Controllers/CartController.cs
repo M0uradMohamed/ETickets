@@ -21,10 +21,18 @@ namespace ETickets.Areas.Customer.Controllers
             this.orderItemRepository = orderItemRepository;
             this.userManager = userManager;
         }
+        public ActionResult Index()
+        {
+            var userId = userManager.GetUserId(User);
+            var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
+            , includeProps: [e=>e.Movie,e=>e.User]);
 
+            ViewBag.TotalPrice = items.Sum(e => e.Movie.Price * e.count);
+
+            return View(items);
+        }
 
         [HttpPost]
- 
         public IActionResult addToCart(MovieOrderVM movieOrderVM)
         {
             if ( User.Identity.IsAuthenticated && User.IsInRole(SD.customerRole) )

@@ -39,15 +39,15 @@
                                 @{
                                     if(item.MovieStatus==MovieStatus.Available )
                                     {
-                                        <a asp-action="#" asp-route-id="@item.Id" class="btn btn-primary " style="background-color:green">book ticket</a>
+                                        <a asp-action="details" asp-route-id="@item.Id" class="btn btn-primary " style="background-color:green">book ticket</a>
                                     }
                                     else if (item.MovieStatus == MovieStatus.Upcoming)
                                     {
-                                        <a asp-action="#" asp-route-id="@item.Id" class="btn btn-primary " style="background-color:cornflowerblue "  >book ticket</a>
+                                        <a asp-action="details" asp-route-id="@item.Id" class="btn btn-primary " style="background-color:cornflowerblue ">book ticket</a>
                                     }
                                     else
                                     {
-                                        <button asp-action="#" asp-route-id="@item.Id" class="btn btn-secondary" disabled>book ticket</button>
+                                        <button asp-action="details" asp-route-id="@item.Id" class="btn btn-secondary" disabled>book ticket</button>
                                     }
                                 }
                             </div>
