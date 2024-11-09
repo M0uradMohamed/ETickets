@@ -31,6 +31,16 @@ namespace ETickets.Areas.Customer.Controllers
             var allMovies = movieRepository.Get();
             foreach (var movie in allMovies)
             {
+
+                //method to make most movies available
+               /* if (movie.StartDate.Month == 10)
+                {
+                    movie.StartDate = movie.StartDate.AddMonths(1);
+                    movie.EndDate = movie.EndDate.AddMonths(1);
+                    movieRepository.Edit(movie);
+                    movieRepository.Commit();
+                }*/
+
                 if (movie.StartDate > DateTime.Now)
                     movie.MovieStatus = MovieStatus.Upcoming;
                 else if (movie.StartDate <= DateTime.Now && movie.EndDate >= DateTime.Now)

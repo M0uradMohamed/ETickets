@@ -1,6 +1,18 @@
 ﻿@model Movie
-<button type="button" class="btn btn-primary" style="background-color:blue" disabled>@Model.MovieStatus</button>
-
+@{
+    if (Model.MovieStatus == MovieStatus.Upcoming)
+    {
+        <h4><span class="badge bg-warning">@Model.MovieStatus</span></h4>
+    }
+    else if (Model.MovieStatus == MovieStatus.Available)
+    {
+        <h4><span class="badge bg-info">@Model.MovieStatus</span></h4>
+    }
+    else if (Model.MovieStatus == MovieStatus.Expired)
+    {
+        <h4><span class="badge bg-danger">@Model.MovieStatus</span></h4>
+    }
+}
 
 <h1 class="card-title">@Model.Name</h1>
 <div class="card mb-3">
@@ -36,7 +48,20 @@
                             src="@Model.TrailerUrl">
                     </iframe>
                 </div>
-                <button type="button" class="btn btn-success">Book ticket</button>
+                @{
+                    if (Model.MovieStatus == MovieStatus.Available)
+                    {
+                        <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:green">book ticket</a>
+                    }
+                    else if (Model.MovieStatus == MovieStatus.Upcoming)
+                    {
+                        <a asp-action="#" asp-route-id="@Model.Id" class="btn btn-primary " style="background-color:cornflowerblue ">book ticket</a>
+                    }
+                    else
+                    {
+                        <button asp-action="#" asp-route-id="@Model.Id" class="btn btn-secondary" disabled>book ticket</button>
+                    }
+                }
             </div>
         </div>
     </div>
