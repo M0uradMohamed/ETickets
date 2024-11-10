@@ -58,7 +58,7 @@ namespace ETickets.Areas.Customer.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "the ticket count can't be less than 1");
+                    TempData["failed"] = "number of ticket must be greater than 0";
                     return RedirectToAction("Details", "home", new { area = "customer", id = movieOrderVM.Id });
                 }
             }
@@ -66,10 +66,9 @@ namespace ETickets.Areas.Customer.Controllers
             {
                 if (User.IsInRole(SD.adminRole))
                 {
-                  
-                   ModelState.AddModelError(string.Empty, "you are admin , you can't buy ticket");
 
-                    return RedirectToAction("NotFound", "Home", new { area = "Customer" });
+                    TempData["failed"] = "you can't buy tickets as an admin";
+                    return RedirectToAction("Details", "home", new { area = "customer", id = movieOrderVM.Id });
                 }
                 return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
