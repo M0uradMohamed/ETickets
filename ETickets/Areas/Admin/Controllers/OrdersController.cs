@@ -1,6 +1,7 @@
 ﻿using ETickets.Repository.IRepository;
 using ETickets.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETickets.Areas.Admin.Controllers

@@ -28,7 +28,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">user id</th>
-                <th scope="col">user Name</th>
                 <th scope="col">payment</th>
 @*                 <th scope="col">all movies</th>
  *@            </tr>
@@ -38,9 +37,9 @@
             {
                 <tr class="table-light">
                     <th scope="row">@item.Id</th>
-                    <td>@item.</td>
                     <td>@item.userId</td>
-                    <td>@item.OrderItems[0].User.UserName</td>
+                    <td>@item.total</td>
+                    
 
 @*                     <td>
                         <a asp-action="movies" asp-area="customer" asp-controller="actors" asp-route-Id="@item.Id" type="button" class="btn btn-dark" style="background:rgb(51, 141, 255 ) ">
