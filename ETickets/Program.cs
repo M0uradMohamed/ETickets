@@ -33,6 +33,7 @@ namespace ETickets
             builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
             builder.Services.AddScoped< IMovieRepository, MovieRepository>();
             builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];

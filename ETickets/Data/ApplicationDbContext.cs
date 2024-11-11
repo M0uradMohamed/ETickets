@@ -17,6 +17,7 @@ namespace ETickets.Data
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<ActorMovie> ActorsMovies { get; set; }
         public DbSet<OrderItem> OrderedItems { get; set; }
+        public DbSet<purchase> purchases { get; set; }
         
 
 

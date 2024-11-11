@@ -26,7 +26,7 @@ namespace ETickets.Areas.Customer.Controllers
         {
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e => e.Movie, e => e.User]);
+            , includeProps: [e => e.Movie],tracked:false);
 
             var sum = items.Sum(e => e.Movie.Price * e.count);
             ViewBag.TotalPrice = Math.Round(sum, 2);
@@ -47,8 +47,9 @@ namespace ETickets.Areas.Customer.Controllers
                     orderitem.ApplicationUserId = userManager.GetUserId(User);
                     orderitem.MovieId = movieOrderVM.Id;
                     orderitem.count = movieOrderVM.count;
+                   // orderitem.purchaseId = 0;
 
-                    var cart = orderItemRepository.GetOne(expression: e => e.MovieId == movieOrderVM.Id && e.ApplicationUserId == userManager.GetUserId(User));
+                    var cart = orderItemRepository.GetOne(expression: e => e.MovieId == movieOrderVM.Id && e.ApplicationUserId == userManager.GetUserId(User),tracked:false);
 
                     if (cart == null)
                         orderItemRepository.Create(orderitem);
@@ -79,7 +80,7 @@ namespace ETickets.Areas.Customer.Controllers
         }
         public IActionResult delete(int id)
         {
-            var orderItem = orderItemRepository.GetOne(expression: e => e.ApplicationUserId == userManager.GetUserId(User));
+            var orderItem = orderItemRepository.GetOne(expression: e => e.ApplicationUserId == userManager.GetUserId(User),tracked:false);
             orderItemRepository.Delete(orderItem);
             orderItemRepository.Commit();
 
@@ -90,7 +91,7 @@ namespace ETickets.Areas.Customer.Controllers
 
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e => e.Movie, e => e.User]);
+            , includeProps: [e => e.Movie, e => e.User],tracked:false);
 
            // bool checkQuantity;
             foreach (var item in items )

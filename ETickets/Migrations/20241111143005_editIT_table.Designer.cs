@@ -4,6 +4,7 @@ using ETickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ETickets.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111143005_editIT_table")]
+    partial class editIT_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,7 +184,7 @@ namespace ETickets.Migrations
                     b.Property<int>("count")
                         .HasColumnType("int");
 
-                    b.Property<int?>("purchaseId")
+                    b.Property<int>("purchaseId")
                         .HasColumnType("int");
 
                     b.HasKey("MovieId", "ApplicationUserId");
@@ -483,15 +486,15 @@ namespace ETickets.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ETickets.Models.purchase", "purchase")
+                    b.HasOne("ETickets.Models.purchase", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("purchaseId");
+                        .HasForeignKey("purchaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
 
                     b.Navigation("User");
-
-                    b.Navigation("purchase");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
