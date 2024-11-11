@@ -27,7 +27,9 @@ namespace ETickets.Areas.Customer.Controllers
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
             , includeProps: [e=>e.Movie,e=>e.User]);
 
-            ViewBag.TotalPrice = items.Sum(e => e.Movie.Price * e.count);
+                var sum =items.Sum(e => e.Movie.Price * e.count);
+            ViewBag.TotalPrice = Math.Round(sum, 2); 
+            
 
             return View(items);
         }
