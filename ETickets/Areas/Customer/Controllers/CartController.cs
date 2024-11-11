@@ -5,6 +5,7 @@ using ETickets.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 
 namespace ETickets.Areas.Customer.Controllers
 {
@@ -16,7 +17,7 @@ namespace ETickets.Areas.Customer.Controllers
         private readonly UserManager<IdentityUser> userManager;
 
         public CartController(IOrderItemRepository orderItemRepository, UserManager<IdentityUser> userManager
-            ,IMovieRepository movieRepository)
+            , IMovieRepository movieRepository)
         {
             this.orderItemRepository = orderItemRepository;
             this.userManager = userManager;
@@ -25,11 +26,11 @@ namespace ETickets.Areas.Customer.Controllers
         {
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e=>e.Movie,e=>e.User]);
+            , includeProps: [e => e.Movie, e => e.User]);
 
-                var sum =items.Sum(e => e.Movie.Price * e.count);
-            ViewBag.TotalPrice = Math.Round(sum, 2); 
-            
+            var sum = items.Sum(e => e.Movie.Price * e.count);
+            ViewBag.TotalPrice = Math.Round(sum, 2);
+
 
             return View(items);
         }
@@ -37,7 +38,7 @@ namespace ETickets.Areas.Customer.Controllers
         [HttpPost]
         public IActionResult addToCart(MovieOrderVM movieOrderVM)
         {
-            if ( User.Identity.IsAuthenticated && User.IsInRole(SD.customerRole) )
+            if (User.Identity.IsAuthenticated && User.IsInRole(SD.customerRole))
             {
 
                 if (movieOrderVM.count > 0)
@@ -76,5 +77,70 @@ namespace ETickets.Areas.Customer.Controllers
             }
 
         }
+        public IActionResult delete(int id)
+        {
+            var orderItem = orderItemRepository.GetOne(expression: e => e.ApplicationUserId == userManager.GetUserId(User));
+            orderItemRepository.Delete(orderItem);
+            orderItemRepository.Commit();
+
+            return RedirectToAction("index");
+        }
+        public IActionResult payment()
+        {
+
+            var userId = userManager.GetUserId(User);
+            var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
+            , includeProps: [e => e.Movie, e => e.User]);
+
+           // bool checkQuantity;
+            foreach (var item in items )
+            {
+              //  checkQuantity = true;
+                if(item.Movie.Quantity<=0)
+                {
+                    TempData["QuantityOut"] = $"{item.Movie.Name} out fo stock";
+                    return RedirectToAction("index");
+                }
+
+            }
+
+            var sum = items.Sum(e => e.Movie.Price * e.count);
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/success",
+                CancelUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/cancel",
+            };
+
+            foreach (var item in items)
+            {
+                options.LineItems.Add(
+                new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "egp",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Movie.Name                            
+                        },
+                        UnitAmount =  (long)item.Movie.Price*100,
+                    },
+                    Quantity = item.count,
+
+                });
+            }
+
+            var service = new SessionService();
+            var session = service.Create(options);
+
+           return Redirect(session.Url);
+        }
+
+    
+
     }
 }

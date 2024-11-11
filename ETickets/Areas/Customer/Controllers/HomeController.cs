@@ -34,13 +34,21 @@ namespace ETickets.Areas.Customer.Controllers
             {
 
                 //method to make most movies available
-               /* if (movie.StartDate.Month == 10)
+                /* if (movie.StartDate.Month == 10)
+                 {
+                     movie.StartDate = movie.StartDate.AddMonths(1);
+                     movie.EndDate = movie.EndDate.AddMonths(1);
+                     movieRepository.Edit(movie);
+                     movieRepository.Commit();
+                 }*/
+
+              /*  if (movie.Quantity == 0)
                 {
-                    movie.StartDate = movie.StartDate.AddMonths(1);
-                    movie.EndDate = movie.EndDate.AddMonths(1);
+                    movie.Quantity = 100;
                     movieRepository.Edit(movie);
                     movieRepository.Commit();
                 }*/
+
 
                 if (movie.StartDate > DateTime.Now)
                     movie.MovieStatus = MovieStatus.Upcoming;

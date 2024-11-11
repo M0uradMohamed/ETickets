@@ -1,5 +1,11 @@
 ﻿@using ETickets.Models;
 @model IEnumerable<OrderItem>
+@if (TempData["QuantityOut"] != null)
+{
+    <div style="color: white; background-color: red; padding: 10px; border-radius: 5px; margin: 20px auto; text-align: center; width: fit-content;">
+        <h1>@TempData["QuantityOut"]</h1>
+    </div>
+}
 
 <form method="post" >
     <br />
@@ -19,7 +25,7 @@
             </div>
             <div class="row mb-3 pb-3">
                 <div class="col-md-2 offset-md-1">
-                    <a href="#" class="btn btn-outline-primary text-uppercase mb-5 btn-sm"><small>Continue Shopping</small></a>
+                    <a asp-area="customer" asp-controller="home" asp-action="index" class="btn btn-outline-primary text-uppercase mb-5 btn-sm"><small>Continue Shopping</small></a>
                 </div>
                 <div class="col-md-10 offset-md-1">
 
@@ -35,13 +41,13 @@
                                 <p><small>@item.Movie.Description</small></p>
                             </div>
                             <div class="col-12  col-lg-5 text-center row">
-                                <div class="col-3 text-md-right pt-2 pt-md-4">
+                                <div class="col-4 text-md-right pt-2 pt-md-4">
                                     <h6 class="fw-semibold">
                                         @item.Movie.Price.ToString("c")
                                         <span class="text-muted">&nbsp;x&nbsp;</span>@item.count
                                     </h6>
                                 </div>
-                                <div class="col-6 col-sm-4 col-lg-6 pt-2">
+@*                                 <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                     <div class="w-75 btn-group" role="group">
                                         <a href="/Cart/Increment?productId=@item.MovieId" class="btn btn-outline-primary bg-gradient py-2">
                                             <i class="bi bi-plus-square"></i>
@@ -50,10 +56,9 @@
                                             <i class="bi bi-dash-square"></i>
                                         </a>
                                     </div>
-
-                                </div>
+                                </div> *@
                                 <div class="col-3 col-sm-4 col-lg-2 offset-lg-1 text-right pt-2">
-                                    <a href="/Cart/Delete?productId=@item.MovieId" class="btn btn-danger bg-gradient py-2 ">
+                                    <a asp-area="customer" asp-controller="cart" asp-action="delete" asp-route-id="@item.MovieId" class="btn btn-danger bg-gradient py-2 ">
                                         <i class="bi bi-trash-fill"></i>
                                     </a>
                                 </div>
@@ -79,7 +84,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2 offset-md-5">
-                        <a href="/Cart/Pay" class="btn btn-primary border-0 bg-gradient w-100 py-2">Summary</a>
+                        <a asp-area="customer" asp-controller="cart" asp-action="payment" class="btn btn-primary border-0 bg-gradient w-100 py-2">purchase</a>
                     </div>
                 </div>
             </div>
