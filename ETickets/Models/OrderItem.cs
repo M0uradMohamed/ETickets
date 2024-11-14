@@ -4,7 +4,7 @@
     {
         public int MovieId { get; set; }
         public string ApplicationUserId { get; set; }
-        public int count { get; set; }
+        public int Count { get; set; }
 
         public Movie Movie { get; set; }    
         public ApplicationUser User { get; set; }

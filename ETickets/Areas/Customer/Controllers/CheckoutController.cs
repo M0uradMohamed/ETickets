@@ -33,12 +33,12 @@ namespace ETickets.Areas.Customer.Controllers
 
 
 
-            var purchase = new purchase();
-            purchase.userId= userId;
-            purchase.OrderItems = items.ToList();
-            var sum = items.Sum(e => e.Movie.Price * e.count);
-            ViewBag.TotalPrice = Math.Round(sum, 2);
-            purchase.total = (long)sum*100;
+            //var purchase = new purchase();
+            //purchase.UserId= userId;
+            //purchase.OrderItems = items.ToList();
+            //var sum = items.Sum(e => e.Movie.Price * e.Count);
+            //ViewBag.TotalPrice = Math.Round(sum, 2);
+            //purchase.Total = (long)sum*100;
 
       
 
@@ -60,10 +60,10 @@ namespace ETickets.Areas.Customer.Controllers
                 orderItemRepository.Delete(item);
                 orderItemRepository.Commit();
             }
-            var paur = purchase;
+            //var paur = purchase;
 
-            purchaseRepository.Create(paur);
-            purchaseRepository.Commit();
+            //purchaseRepository.Create(paur);
+            //purchaseRepository.Commit();
 
             return View();
         }  

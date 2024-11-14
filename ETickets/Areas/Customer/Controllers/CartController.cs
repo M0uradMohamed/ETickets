@@ -15,12 +15,14 @@ namespace ETickets.Areas.Customer.Controllers
     {
         private readonly IOrderItemRepository orderItemRepository;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IMovieRepository movieRepository;
 
         public CartController(IOrderItemRepository orderItemRepository, UserManager<IdentityUser> userManager
             , IMovieRepository movieRepository)
         {
             this.orderItemRepository = orderItemRepository;
             this.userManager = userManager;
+            this.movieRepository = movieRepository;
         }
         public ActionResult Index()
         {
@@ -28,7 +30,7 @@ namespace ETickets.Areas.Customer.Controllers
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
             , includeProps: [e => e.Movie],tracked:false);
 
-            var sum = items.Sum(e => e.Movie.Price * e.count);
+            var sum = items.Sum(e => e.Movie.Price * e.Count);
             ViewBag.TotalPrice = Math.Round(sum, 2);
 
 
@@ -46,7 +48,7 @@ namespace ETickets.Areas.Customer.Controllers
                     var orderitem = new OrderItem();
                     orderitem.ApplicationUserId = userManager.GetUserId(User);
                     orderitem.MovieId = movieOrderVM.Id;
-                    orderitem.count = movieOrderVM.count;
+                    orderitem.Count = movieOrderVM.count;
                    // orderitem.purchaseId = 0;
 
                     var cart = orderItemRepository.GetOne(expression: e => e.MovieId == movieOrderVM.Id && e.ApplicationUserId == userManager.GetUserId(User),tracked:false);
@@ -54,7 +56,7 @@ namespace ETickets.Areas.Customer.Controllers
                     if (cart == null)
                         orderItemRepository.Create(orderitem);
                     else
-                        cart.count += orderitem.count;
+                        cart.Count += orderitem.Count;
 
                     orderItemRepository.Commit();
 
@@ -105,7 +107,7 @@ namespace ETickets.Areas.Customer.Controllers
 
             }
 
-            var sum = items.Sum(e => e.Movie.Price * e.count);
+            var sum = items.Sum(e => e.Movie.Price * e.Count);
 
             var options = new SessionCreateOptions
             {
@@ -130,7 +132,7 @@ namespace ETickets.Areas.Customer.Controllers
                         },
                         UnitAmount =  (long)item.Movie.Price*100,
                     },
-                    Quantity = item.count,
+                    Quantity = item.Count,
 
                 });
             }
