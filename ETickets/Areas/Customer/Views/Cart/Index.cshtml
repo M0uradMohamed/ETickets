@@ -5,7 +5,13 @@
     <div style="color: white; background-color: red; padding: 10px; border-radius: 5px; margin: 20px auto; text-align: center; width: fit-content;">
         <h1>@TempData["QuantityOut"]</h1>
     </div>
+}@if (TempData["noItems"] != null)
+{
+    <div style="color: white; background-color: red; padding: 10px; border-radius: 5px; margin: 20px auto; text-align: center; width: fit-content;">
+        <h1>@TempData["noItems"]</h1>
+    </div>
 }
+
 
 <form method="post" >
     <br />
@@ -44,10 +50,10 @@
                                 <div class="col-4 text-md-right pt-2 pt-md-4">
                                     <h6 class="fw-semibold">
                                         @item.Movie.Price.ToString("c")
-@*                                         <span class="text-muted">&nbsp;x&nbsp;</span>@item.count
- *@                                    </h6>
+                                       <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
+                                     </h6>
                                 </div>
-@*                                 <div class="col-6 col-sm-4 col-lg-6 pt-2">
+@*                              <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                     <div class="w-75 btn-group" role="group">
                                         <a href="/Cart/Increment?productId=@item.MovieId" class="btn btn-outline-primary bg-gradient py-2">
                                             <i class="bi bi-plus-square"></i>
@@ -56,7 +62,7 @@
                                             <i class="bi bi-dash-square"></i>
                                         </a>
                                     </div>
-                                </div> *@
+                                </div>  *@
                                 <div class="col-3 col-sm-4 col-lg-2 offset-lg-1 text-right pt-2">
                                     <a asp-area="customer" asp-controller="cart" asp-action="delete" asp-route-id="@item.MovieId" class="btn btn-danger bg-gradient py-2 ">
                                         <i class="bi bi-trash-fill"></i>

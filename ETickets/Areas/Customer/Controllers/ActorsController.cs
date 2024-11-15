@@ -18,7 +18,7 @@ namespace ETickets.Areas.Customer.Controllers
         public IActionResult Index(string actorname, int Id)
         {
 
-            var actor = actorRepository.Get(expression: e => e.Id == Id)
+            var actor = actorRepository.Get(expression: e=> actorname.Contains(e.FirstName) && actorname.Contains(e.LastName))
                  .Select(e => new { FullName = e.FirstName + " " + e.LastName, e.Bio, e.Id, e.ProfilePicture, e.News, e.Movies }).FirstOrDefault();
 
             return View(actor);

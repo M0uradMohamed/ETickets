@@ -28,7 +28,7 @@ namespace ETickets.Areas.Customer.Controllers
         {
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e => e.Movie],tracked:false);
+            , includeProps: [e => e.Movie], tracked: false);
 
             var sum = items.Sum(e => e.Movie.Price * e.Count);
             ViewBag.TotalPrice = Math.Round(sum, 2);
@@ -49,9 +49,9 @@ namespace ETickets.Areas.Customer.Controllers
                     orderitem.ApplicationUserId = userManager.GetUserId(User);
                     orderitem.MovieId = movieOrderVM.Id;
                     orderitem.Count = movieOrderVM.count;
-                   // orderitem.purchaseId = 0;
+                    orderitem.purchaseId = null;
 
-                    var cart = orderItemRepository.GetOne(expression: e => e.MovieId == movieOrderVM.Id && e.ApplicationUserId == userManager.GetUserId(User),tracked:false);
+                    var cart = orderItemRepository.GetOne(expression: e => e.MovieId == movieOrderVM.Id && e.ApplicationUserId == userManager.GetUserId(User), tracked: false);
 
                     if (cart == null)
                         orderItemRepository.Create(orderitem);
@@ -82,7 +82,7 @@ namespace ETickets.Areas.Customer.Controllers
         }
         public IActionResult delete(int id)
         {
-            var orderItem = orderItemRepository.GetOne(expression: e => e.ApplicationUserId == userManager.GetUserId(User),tracked:false);
+            var orderItem = orderItemRepository.GetOne(expression: e => e.ApplicationUserId == userManager.GetUserId(User), tracked: false);
             orderItemRepository.Delete(orderItem);
             orderItemRepository.Commit();
 
@@ -93,57 +93,68 @@ namespace ETickets.Areas.Customer.Controllers
 
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e => e.Movie, e => e.User],tracked:false);
+            , includeProps: [e => e.Movie, e => e.User], tracked: false);
 
-           // bool checkQuantity;
-            foreach (var item in items )
+            if (items.Count() != 0)
             {
-              //  checkQuantity = true;
-                if(item.Movie.Quantity<=0)
+
+
+
+                foreach (var item in items)
                 {
-                    TempData["QuantityOut"] = $"{item.Movie.Name} out fo stock";
-                    return RedirectToAction("index");
+
+                    if (item.Movie.Quantity <= 0)
+                    {
+                        TempData["QuantityOut"] = $"{item.Movie.Name} out fo stock";
+                        return RedirectToAction("index");
+                    }
+
                 }
 
-            }
+                var sum = items.Sum(e => e.Movie.Price * e.Count);
 
-            var sum = items.Sum(e => e.Movie.Price * e.Count);
-
-            var options = new SessionCreateOptions
-            {
-                PaymentMethodTypes = new List<string> { "card" },
-                LineItems = new List<SessionLineItemOptions>(),
-                Mode = "payment",
-                SuccessUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/success",
-                CancelUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/cancel",
-            };
-
-            foreach (var item in items)
-            {
-                options.LineItems.Add(
-                new SessionLineItemOptions
+                var options = new SessionCreateOptions
                 {
-                    PriceData = new SessionLineItemPriceDataOptions
-                    {
-                        Currency = "usd",
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = item.Movie.Name                            
-                        },
-                        UnitAmount =  (long)item.Movie.Price*100,
-                    },
-                    Quantity = item.Count,
+                    PaymentMethodTypes = new List<string> { "card" },
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+                    SuccessUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/success",
+                    CancelUrl = $"{Request.Scheme}://{Request.Host}/customer/checkout/cancel",
+                };
 
-                });
+                foreach (var item in items)
+                {
+                    options.LineItems.Add(
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Movie.Name
+                            },
+                            UnitAmount = (long)item.Movie.Price * 100,
+                        },
+                        Quantity = item.Count,
+
+                    });
+                }
+
+                var service = new SessionService();
+                var session = service.Create(options);
+
+                return Redirect(session.Url);
+            }
+            else
+            {
+                TempData["noItems"] = "the is no items to purchase";
+                return RedirectToAction("index");
             }
 
-            var service = new SessionService();
-            var session = service.Create(options);
-
-           return Redirect(session.Url);
         }
 
-    
+
 
     }
 }

@@ -29,7 +29,7 @@ namespace ETickets.Areas.Customer.Controllers
         {
             var userId = userManager.GetUserId(User);
             var items = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-            , includeProps: [e => e.Movie], tracked:false);
+            , includeProps: [e => e.Movie]);
 
 
 
@@ -51,15 +51,18 @@ namespace ETickets.Areas.Customer.Controllers
                 movieRepository.Edit(item.Movie);
                 movieRepository.Commit();
             }
+             purchaseRepository.Create(purchase);
+             purchaseRepository.Commit();
 
             foreach (var item in items)
             {
-                orderItemRepository.Delete(item);
+                var order= new OrderItem();
+                order = item;
+                orderItemRepository.Delete(order);
                 orderItemRepository.Commit();
             }
 
-            purchaseRepository.Create(purchase);
-            purchaseRepository.Commit();
+
 
             return View();
         }  
