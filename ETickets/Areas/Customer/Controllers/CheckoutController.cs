@@ -33,37 +33,33 @@ namespace ETickets.Areas.Customer.Controllers
 
 
 
-            //var purchase = new purchase();
-            //purchase.UserId= userId;
-            //purchase.OrderItems = items.ToList();
-            //var sum = items.Sum(e => e.Movie.Price * e.Count);
-            //ViewBag.TotalPrice = Math.Round(sum, 2);
-            //purchase.Total = (long)sum*100;
+            var purchase = new purchase();
+            purchase.UserId = userId;
+            purchase.Username = userManager.GetUserName(User);
+            purchase.OrderItems = items.ToList();
+            var sum = items.Sum(e => e.Movie.Price * e.Count);
+            ViewBag.TotalPrice = Math.Round(sum, 2);
+            purchase.Total = (long)sum * 100;
 
-      
 
-          /*  foreach (var item in items)
+
+            foreach (var item in items)
             {
-                var movieId = item.Movie.Id;
+ 
+              item.Movie.Quantity -= item.Count;
 
-                var movie = movieRepository.GetOne(expression: e => e.Id == movieId,tracked:false);
-                movie.Quantity-=item.count;
-
-                movieRepository.Edit(movie);
+                movieRepository.Edit(item.Movie);
                 movieRepository.Commit();
-            }*/
-            var orderitems = orderItemRepository.Get(expression: e => e.ApplicationUserId == userId
-, includeProps: [e => e.Movie], tracked: false);
+            }
 
-            foreach (var item in orderitems)
+            foreach (var item in items)
             {
                 orderItemRepository.Delete(item);
                 orderItemRepository.Commit();
             }
-            //var paur = purchase;
 
-            //purchaseRepository.Create(paur);
-            //purchaseRepository.Commit();
+            purchaseRepository.Create(purchase);
+            purchaseRepository.Commit();
 
             return View();
         }  
