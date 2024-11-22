@@ -17,9 +17,9 @@ namespace ETickets.Areas.Admin.ViewModels
         public string LastName { get; set; }
         [Required]
         [MinLength(3)]
+        public string Bio { get; set; }
 
         public string ProfilePicture { get; set; }
-        public string Bio { get; set; }
         [Required]
         [MinLength(3)]
         public string News { get; set; }
